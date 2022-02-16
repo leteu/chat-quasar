@@ -1,0 +1,45 @@
+// 캘린더 디자인
+.fc-day-sat
+  .fc-daygrid-day-number
+    color: blue
+
+.fc-day-sun
+  .fc-daygrid-day-number
+    color: red
+
+.fc-day-other
+  background: rgba(0,0,0,.05)
+
+.fc-day
+  // cursor: pointer
+
+.fc-daygrid-day
+  height: 15%
+
+.fc-daygrid-event-dot
+  display: none
+
+.fc-event-title
+  padding-left: 8px !important
+  // font-weight: normal !important
+
+.draggable
+  cursor: grab
+
+.draggable:active
+  cursor: grabbing
+
+.essentials
+  padding-left: 8px
+  &::before
+    content: ''
+    position: absolute
+    width: 5px
+    height: 5px
+    border-radius: 50%
+    top: 0
+    left: 0px
+    background-color: #d32f2f
+
+.sticky
+  position: sticky
