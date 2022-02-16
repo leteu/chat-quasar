@@ -62,7 +62,7 @@ const actions: ActionTree<ExampleStateInterface, StateInterface> = {
     if (stomp && stomp.connected) {
       const msg = { 
         userName: `익명-${Math.floor(Math.random() * 1000)}`,
-        content: message.replaceAll(/(\n|\r\n)/g, "<br>"),
+        content: message,
         roomId
       };
       stomp.send("/pub/chat/room", JSON.stringify(msg), {});

@@ -11,9 +11,21 @@
           icon="clear"
         />
     </div>
-    <div class="col">
-      {{dataList}}
-    </div>
+
+    <q-card flat square bordered class="col">
+      <q-card-section>
+        <div >
+
+          
+        </div>
+        <div class="relative-position" v-for="(item, index) in dataList" :key="`chat-${index}`">
+          <div class="text-bold small-font">{{item.userName}}</div>
+          <div>
+            {{item.content}}
+          </div>
+        </div>
+      </q-card-section>
+    </q-card>
 
     <div class="row">
       <div class="relative-position col">
@@ -25,10 +37,15 @@
           type="textarea"
           @keydown.enter="e => {
             if(!e.shiftKey) {
+              e.preventDefault();
               onClickSend();
             }
           }"
           row="2"
+          :rules="[val => !!val && !!val.trim() || '']"
+          class="hideErrorMessageSlot"
+          hide-bottom-space
+          ref="messageInput"
         />
       </div>
       <q-btn dense @click="onClickSend" label="전송" color="primary" />
@@ -37,6 +54,7 @@
 </template>
 
 <script lang="ts">
+import { QInput } from 'quasar';
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -57,13 +75,15 @@ export default defineComponent({
   },
   methods: {
     onClickSend() {
-      this.$store.dispatch('StompModule/sendMsgRoom',
-        {
-          message: this.$data.message,
-          roomId: this.$route.params.roomId
-        }
-      );
-      this.$data.message = '';
+      if((this.$refs.messageInput as QInput).validate()) {
+        this.$store.dispatch('StompModule/sendMsgRoom',
+          {
+            message: this.$data.message,
+            roomId: this.$route.params.roomId
+          }
+        );
+        this.$data.message = '';
+      }
     }
   },
   beforeDestroy() {
