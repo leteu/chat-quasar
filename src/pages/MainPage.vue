@@ -60,6 +60,11 @@ export default defineComponent({
     // getRoomList() {
     //   /sub/room/list
     // }
+  },
+  watch: {
+    '$route': function(to, from) {
+      this.$store.dispatch('StompModule/UnSubscribeRoomList');
+    }
   }
 });
 </script>

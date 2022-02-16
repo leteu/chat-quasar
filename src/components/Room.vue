@@ -4,20 +4,17 @@
       <div class="text-h6">
           방이름
           <!-- {{  }} -->
-        </div>
-        <q-btn
-          dense
-          color="dark"
-          icon="clear"
-        />
+      </div>
+      <q-btn
+        dense
+        color="dark"
+        icon="clear"
+        @click="leaveRoom()"
+      />
     </div>
 
     <q-card flat square bordered class="col">
-      <q-card-section>
-        <div >
-
-          
-        </div>
+      <q-card-section class="scroll-y full-height">
         <div class="relative-position" v-for="(item, index) in dataList" :key="`chat-${index}`">
           <div class="text-bold small-font">{{item.userName}}</div>
           <div>
@@ -71,7 +68,7 @@ export default defineComponent({
   computed: {
     dataList: function () {
       return this.$store.getters['StompModule/getChatList'];
-    }
+    },
   },
   methods: {
     onClickSend() {
@@ -84,10 +81,17 @@ export default defineComponent({
         );
         this.$data.message = '';
       }
+    },
+
+    leaveRoom() {
+      this.$store.dispatch('StompModule/UnSubscribeRoom');
+      this.$router.push('/');
     }
   },
-  beforeDestroy() {
-    this.$store.dispatch('StompModule/UnSubscribeRoom');
+  watch: {
+    '$route': function(to, from) {
+      this.$store.dispatch('StompModule/UnSubscribeRoom');
+    }
   }
 })
 </script>
