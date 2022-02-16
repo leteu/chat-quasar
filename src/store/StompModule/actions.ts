@@ -61,12 +61,16 @@ const actions: ActionTree<ExampleStateInterface, StateInterface> = {
   sendMsgRoom(context, { message, roomId }) {
     if (stomp && stomp.connected) {
       const msg = { 
-        userName: `익명-${Math.floor(Math.random() * 1000)}`,
+        userName: context.state.randomName,
         content: message,
         roomId
       };
       stomp.send("/pub/chat/room", JSON.stringify(msg), {});
     }
+  },
+
+  JoinRoom(context) {
+    context.commit('setRandomName');
   }
 };
 

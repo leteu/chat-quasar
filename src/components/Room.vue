@@ -50,6 +50,7 @@
 </template>
 
 <script lang="ts">
+import axios from 'axios';
 import { QInput } from 'quasar';
 import { defineComponent } from 'vue'
 
@@ -63,6 +64,7 @@ export default defineComponent({
     if(this.$store.getters['StompModule/getConnectStatus']) {
       this.$store.dispatch('StompModule/SubscribeRoom', this.$route.params.roomId)
     }
+    this.sendJoinRoom();
   },
   computed: {
     dataList: function () {
@@ -70,6 +72,14 @@ export default defineComponent({
     },
   },
   methods: {
+    sendJoinRoom() {
+      this.$store.dispatch('StompModule/JoinRoom');
+      axios.post('/chat/room/in', {
+        roomId: this.$route.params.roomId,
+        userName: this.$store.getters['StompModule/getRandomName']
+      })
+    },
+
     onClickSend() {
       if((this.$refs.messageInput as QInput).validate()) {
         this.$store.dispatch('StompModule/sendMsgRoom',

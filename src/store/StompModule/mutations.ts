@@ -32,6 +32,10 @@ const mutation: MutationTree<ExampleStateInterface> = {
 
   setCurrenRoomState(state, value) {
     state.currentRoom = value
+  },
+
+  setRandomName (state) {
+    state.randomName = `익명-${Math.floor(Math.random() * 1000)}`;
   }
 };
 

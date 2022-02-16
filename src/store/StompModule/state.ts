@@ -11,7 +11,8 @@ export interface ExampleStateInterface {
   roomList: Room[],
   connectStatus: boolean,
   chatlist: any[],
-  currentRoom: Room | null
+  currentRoom: Room | null,
+  randomName: string
 }
 
 function state(): ExampleStateInterface {
@@ -21,7 +22,8 @@ function state(): ExampleStateInterface {
     roomList: [],
     connectStatus: false,
     chatlist: [],
-    currentRoom: null
+    currentRoom: null,
+    randomName: ''
   }
 };
 
