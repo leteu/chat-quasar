@@ -1,9 +1,10 @@
 <template>
   <q-list bordered separator class="full-height">
-    <template v-for="(item) in dataList" :key="`roomId-${item.id}`">
+    <template v-for="(item, index) in dataList" :key="`roomId-${item.id}`">
       <q-item class="flex items-center" clickable @click="evt => onClickRoom(evt, item)">
         {{item.name}}
       </q-item>
+      <q-separator v-if="dataList.length === (index+1)" />
     </template>
   </q-list>
 </template>
