@@ -21,7 +21,7 @@
         </div>
       </q-card-section>
       <q-separator />
-      <q-card-section>
+      <q-card-section class="text-right q-py-sm">
         <q-btn
           label="생성"
           color="primary"
@@ -37,7 +37,12 @@ import axios from 'axios';
 import { QDialog } from 'quasar'
 import { defineComponent, ref } from 'vue'
 
-const DialogMixin = defineComponent({
+export default defineComponent({
+  data() {
+    return {
+      roomTitle: ''
+    }
+  },
   methods: {
     show() {
       (this.$refs.dialog as QDialog).show();
@@ -45,26 +50,19 @@ const DialogMixin = defineComponent({
 
     hide() {
       (this.$refs.dialog as QDialog).hide();
-    }
-  }
-})
+    },
 
-export default defineComponent({
-  mixins: [ DialogMixin ],
-  setup() {
-    const roomTitle = ref('');
-
-    function onClickSubmit() {
-      axios.post('create/room', { roomName: roomTitle.value })
-        .then((res) => {
-          console.log(res)
+    onClickSubmit() {
+      axios.post('create/room', { roomName: this.roomTitle })
+        .then(({status}) => {
+          if(status === 200) {
+            this.hide();
+          } else {
+            alert('실패! 다시 시도해주세요.');
+            return;
+          }
         })
     }
-
-    return {
-      roomTitle,
-      onClickSubmit
-    }
-  },
+  }
 })
 </script>
