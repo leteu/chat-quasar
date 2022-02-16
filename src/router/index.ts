@@ -5,7 +5,7 @@ import {
   createWebHashHistory,
   createWebHistory,
 } from 'vue-router';
-import { StateInterface } from '../store';
+import store, { StateInterface, storeKey } from '../store';
 import routes from './routes';
 
 /*
@@ -32,6 +32,31 @@ export default route<StateInterface>(function (/* { store, ssrContext } */) {
     history: createHistory(
       process.env.MODE === 'ssr' ? void 0 : process.env.VUE_ROUTER_BASE
     ),
+  });
+
+  Router.beforeEach((to, from, next) => {
+    if(to.matched.some(record => record.meta.ListPage)){
+      next();
+      return;
+    }
+
+    if(to.matched.some(record => record.meta.ChatPage)){
+      if(!!to.params?.roomId) {
+        console.log(store);
+        if(!store.getters['StompModule/getConnectStatus']) {
+          next('/');
+          return;
+        } else {
+          next();
+          return;
+        }
+      } else {
+        next(from.path);
+        return;
+      }
+    }
+
+    next();
   });
 
   return Router;

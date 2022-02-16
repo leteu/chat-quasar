@@ -11,11 +11,13 @@ const routes: RouteRecordRaw[] = [
         children: [
           {
             path: '',
-            component: () => import('pages/MainPage.vue')
+            component: () => import('pages/MainPage.vue'),
+            meta: { ListPage: true }
           },
           {
             path: 'room/:roomId',
-            component: () => import('components/Room.vue')
+            component: () => import('components/Room.vue'),
+            meta: { ChatPage: true }
           },
         ]
       },
