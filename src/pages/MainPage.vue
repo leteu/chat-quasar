@@ -11,7 +11,7 @@
           @click="onClickCreateRoom()"
         />
     </div>
-    <RoomList class="col" @update:room="item => updateRoom(item)" />
+    <RoomList class="col" @update:room="item => updateRoom(item)" @remove:room="item => removeRoom(item)" />
   </div>
 </template>
 
@@ -47,6 +47,17 @@ export default defineComponent({
       this.$store.dispatch('StompModule/UnSubscribeRoomList');
       this.$router.push(`/room/${item.id}`);
       this.$store.commit('StompModule/setCurrenRoomState', item);
+    },
+
+    removeRoom(item: Room) {
+      axios.delete(`${item.id}/room`)
+        .then(() => {
+          this.$q.notify({
+            message: '삭제되었습니다.',
+            color: 'red',
+            icon: 'delete'
+          })
+        })
     },
 
     onClickCreateRoom() {

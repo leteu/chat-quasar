@@ -53,7 +53,7 @@ export default defineComponent({
     },
 
     onClickSubmit() {
-      axios.post('create/room', { roomName: this.roomTitle })
+      axios.post('room', { roomName: this.roomTitle })
         .then(({status}) => {
           if(status === 200) {
             this.hide();
