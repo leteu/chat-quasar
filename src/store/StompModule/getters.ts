@@ -17,6 +17,10 @@ const getters: GetterTree<ExampleStateInterface, StateInterface> = {
 
   getChatList (context) {
     return context.chatlist;
+  },
+
+  getCurrentRoomName (context) {
+    return context.currentRoom;
   }
 };
 

@@ -44,7 +44,7 @@ const actions: ActionTree<ExampleStateInterface, StateInterface> = {
   },
 
   UnSubscribeRoomList(context) {
-    RoomListSub.unsubscribe();
+    RoomListSub?.unsubscribe();
   },
 
   SubscribeRoom(context, roomId) {
@@ -54,7 +54,7 @@ const actions: ActionTree<ExampleStateInterface, StateInterface> = {
   },
 
   UnSubscribeRoom(context) {
-    RoomSub.unsubscribe();
+    RoomSub?.unsubscribe();
     context.commit('resetChatListState');
   },
 

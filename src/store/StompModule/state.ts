@@ -10,7 +10,8 @@ export interface ExampleStateInterface {
   stomp: Client | null,
   roomList: Room[],
   connectStatus: boolean,
-  chatlist: any[]
+  chatlist: any[],
+  currentRoom: Room | null
 }
 
 function state(): ExampleStateInterface {
@@ -19,7 +20,8 @@ function state(): ExampleStateInterface {
     stomp: null,
     roomList: [],
     connectStatus: false,
-    chatlist: []
+    chatlist: [],
+    currentRoom: null
   }
 };
 

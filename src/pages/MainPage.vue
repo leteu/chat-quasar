@@ -46,6 +46,7 @@ export default defineComponent({
     updateRoom(item: Room) {
       this.$store.dispatch('StompModule/UnSubscribeRoomList');
       this.$router.push(`/room/${item.id}`);
+      this.$store.commit('StompModule/setCurrenRoomState', item);
     },
 
     onClickCreateRoom() {

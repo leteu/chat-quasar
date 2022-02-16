@@ -28,6 +28,10 @@ const mutation: MutationTree<ExampleStateInterface> = {
 
   resetChatListState(state) {
     state.chatlist = [];
+  },
+
+  setCurrenRoomState(state, value) {
+    state.currentRoom = value
   }
 };
 
