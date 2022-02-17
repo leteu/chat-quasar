@@ -1,5 +1,5 @@
 <template>
-  <div class="q-mx-auto width-50pct q-pa-lg q-gutter-y-sm column">
+  <div class="q-pa-lg q-gutter-y-sm column height-inherit">
     <div class="flex justify-between items-center">
       <div class="text-h6 text-primary">
         {{ $store.getters['StompModule/getCurrentRoomName'].name }}
