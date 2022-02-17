@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-lg q-gutter-y-sm column height-inherit">
+  <div class="q-pa-lg q-gutter-y-sm column full-height">
     <div class="flex justify-between items-center">
       <div class="text-h6">
           로비
