@@ -2,7 +2,7 @@
   <div class="q-pa-lg q-gutter-y-sm column full-height">
     <div class="flex justify-between items-center">
       <div class="text-h6 text-primary">
-        {{ $store.getters['StompModule/getCurrentRoomName'].name }}
+        {{ $store.getters['StompModule/getCurrentRoomName']?.name }}
       </div>
       <div class="flex items-center justify-start q-gutter-x-sm">
         <q-btn
@@ -141,6 +141,7 @@ export default defineComponent({
   beforeRouteLeave(to, from, next) {
     this.$store.dispatch('StompModule/UnSubscribeRoom');
     this.$store.dispatch('StompModule/UnSubscribeUserInfo');
+    this.$store.commit('StompModule/setCurrenRoomState', null);
     next();
   },
 })
