@@ -25,6 +25,10 @@ const getters: GetterTree<ExampleStateInterface, StateInterface> = {
 
   getRandomName (context) {
     return context.randomName;
+  },
+
+  getUserInfo (context) {
+    return context.userInfo
   }
 };
 

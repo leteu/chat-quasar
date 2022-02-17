@@ -26,6 +26,10 @@ const mutation: MutationTree<ExampleStateInterface> = {
     state.chatlist.push(value);
   },
 
+  setUserInfo(state, value) {
+    state.userInfo = value
+  },
+
   resetChatListState(state) {
     state.chatlist = [];
   },

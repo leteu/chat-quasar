@@ -6,14 +6,26 @@ export interface Room {
   private: boolean
 }
 
+export interface Chat {
+  userName: string,
+  content: string,
+  type?: string,
+  date: string
+}
+
+export interface UserInfo {
+  userName: string
+}
+
 export interface ExampleStateInterface {
   prop: boolean;
   stomp: Client | null,
   roomList: Room[],
   connectStatus: boolean,
-  chatlist: any[],
+  chatlist: Chat[],
   currentRoom: Room | null,
-  randomName: string
+  randomName: string,
+  userInfo: UserInfo[],
 }
 
 function state(): ExampleStateInterface {
@@ -24,7 +36,8 @@ function state(): ExampleStateInterface {
     connectStatus: false,
     chatlist: [],
     currentRoom: null,
-    randomName: ''
+    randomName: '',
+    userInfo: []
   }
 };
 
