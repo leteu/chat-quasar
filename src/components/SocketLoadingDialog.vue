@@ -1,5 +1,5 @@
 <template>
-  <q-dialog ref="dialog" :seamless="false">
+  <q-dialog ref="dialog" :seamless="false" noEscDismiss noBackdropDismiss>
     <q-card class="min-width-200px">
       <q-card-section class="text-center">
         <q-spinner-hourglass
