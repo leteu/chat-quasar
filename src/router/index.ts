@@ -46,8 +46,13 @@ export default route<StateInterface>(function (/* { store, ssrContext } */) {
           next('/');
           return;
         } else {
-          next();
-          return;
+          if (store.getters['StompModule/getCurrentRoomName']) {
+            next();
+            return;
+          } else {
+            next('/');
+            return;
+          }
         }
       } else {
         next(from.path);

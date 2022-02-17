@@ -44,26 +44,14 @@ export default defineComponent({
   },
   methods: {
     updateRoom(item: Room) {
-      if(item.private) {
-        const passwordInput = prompt('비밀번호를 입력해주세요.');
-        if(passwordInput) {
-          axios.post('verification/room', { roomId: item.id, password: passwordInput })
-            .then(({data}) => {
-              if(data) {
-                this.$store.dispatch('StompModule/UnSubscribeRoomList');
-                this.$router.push(`/room/${item.id}`);
-                this.$store.commit('StompModule/setCurrenRoomState', item);
-              } else {
-                alert("비밀번호가 일치하지 않습니다.");
-              }
-            })
-        }
-        return;
-      } else {
-        this.$store.dispatch('StompModule/UnSubscribeRoomList');
-        this.$router.push(`/room/${item.id}`);
-        this.$store.commit('StompModule/setCurrenRoomState', item);
-      }
+      this.$store.dispatch('StompModule/chkRoomPassword', item)
+        .then((value) => {
+          if(value) {
+            this.$store.dispatch('StompModule/UnSubscribeRoomList');
+            this.$router.push(`/room/${item.id}`);
+            this.$store.commit('StompModule/setCurrenRoomState', item);
+          }
+        })
     },
 
     removeRoom(item: Room) {

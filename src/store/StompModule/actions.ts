@@ -107,6 +107,27 @@ const actions: ActionTree<ExampleStateInterface, StateInterface> = {
       stomp.send("/pub/chat/room", JSON.stringify(msg), {});
     }
   },
+
+  chkRoomPassword(context, item: { id: number, private: boolean }): boolean | Promise<boolean> {
+    if(item.private) {
+      const passwordInput = prompt('비밀번호를 입력해주세요.');
+      if(passwordInput) {
+        return axios.post('verification/room', { roomId: item.id, password: passwordInput })
+          .then(({data}) => {
+            if(data) {
+              return true;
+            } else {
+              alert("비밀번호가 일치하지 않습니다.");
+              return false;
+            }
+          })
+      } else {
+        return false;
+      }
+    } else {
+      return true;
+    }
+  }
 };
 
 export default actions;
