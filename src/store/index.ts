@@ -5,6 +5,7 @@ import {
   Store as VuexStore,
   useStore as vuexUseStore,
 } from 'vuex'
+import DarkModeModule from './DarkModeModule'
 import StompModule from './StompModule'
 
 // import example from './module-example'
@@ -38,7 +39,8 @@ export const storeKey: InjectionKey<VuexStore<StateInterface>> = Symbol('vuex-ke
 
 export default createStore<StateInterface>({
   modules: {
-    StompModule
+    StompModule,
+    DarkModeModule
   },
 
   // enable strict mode (adds overhead!)

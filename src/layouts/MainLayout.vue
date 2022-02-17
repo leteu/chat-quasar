@@ -13,6 +13,14 @@
       <router-view />
     </q-page-container>
 
+    <div
+      class="absolute absolute-bottom-right width-50px height-50px bg-primary q-ma-md round-radius flex items-center justify-center cursor-pointer"
+      @click="() => {
+        $store.dispatch('DarkModeModule/toggleDarkMode');
+      }"
+    >
+      <q-icon :name="!$store.getters['DarkModeModule/isDarkMode'] ? 'dark_mode' : 'brightness_7'" color="white" size="md" />
+    </div>
   </q-layout>
 </template>
 
@@ -74,7 +82,7 @@ export default defineComponent({
   },
 
   setup () {
-    const leftDrawerOpen = ref(false)
+    const leftDrawerOpen = ref(false);
 
     return {
       essentialLinks: linksList,
