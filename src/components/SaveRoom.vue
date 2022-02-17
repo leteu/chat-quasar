@@ -6,7 +6,7 @@
         <q-icon name="clear" class="cursor-pointer" size="32px" @click="hide()"></q-icon>
       </q-card-section>
       <q-separator />
-      <q-card-section>
+      <q-card-section class="q-gutter-y-md">
         <div class="relative-position">
           <div class="text-bold small-font essentials">방 이름</div>
           <q-input
@@ -17,6 +17,28 @@
             :rules="[val => !!val && !!val?.id || '']"
             class="hideErrorMessageSlot"
             hide-bottom-space
+          />
+        </div>
+        <div class="relative-position">
+          <div class="text-bold small-font flex items-center q-gutter-x-sm">
+            <div>
+              비밀방
+            </div>
+            <q-checkbox
+              dense
+              square
+              outlined
+              v-model="private"
+              @update:model-value="() => password = ''"
+            />
+          </div>
+          <q-input
+            dense
+            square
+            outlined
+            v-model="password"
+            placeholder="비밀번호"
+            v-if="private"
           />
         </div>
       </q-card-section>
@@ -40,7 +62,9 @@ import { defineComponent, ref } from 'vue'
 export default defineComponent({
   data() {
     return {
-      roomTitle: ''
+      roomTitle: '',
+      private: false,
+      password: '',
     }
   },
   methods: {
@@ -53,7 +77,7 @@ export default defineComponent({
     },
 
     onClickSubmit() {
-      axios.post('room', { roomName: this.roomTitle })
+      axios.post('room', { roomName: this.roomTitle, password: this.password||null })
         .then(({status}) => {
           if(status === 200) {
             this.hide();

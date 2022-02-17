@@ -1,9 +1,11 @@
 <template>
   <q-list bordered separator class="full-height">
-    <template v-for="(item, index) in dataList" :key="`roomId-${item.id}`">
-      <q-item class="flex items-center" clickable @click="evt => onClickRoom(evt, item)">
+    <template v-for="(item, index) in !dataList.length ? dataAPIList : dataList" :key="`roomId-${item.id}`">
+      <q-item clickable @click="evt => onClickRoom(evt, item)">
+        <q-item-section avatar class="flex items-center justify-center">
+          <q-icon name="lock" v-if="item.private" />
+        </q-item-section>
         <q-item-section>
-          <q-icon name="lock" v-if="false" />
           {{item.name}}
         </q-item-section>
         <q-item-section side>
@@ -29,11 +31,11 @@ export default defineComponent({
   name: 'RoomList',
   data() {
     return {
-
+      dataAPIList: [],
     }
   },
   async created() {
-    
+    this.getList();
   },
   computed: {
     dataList: function () {
@@ -47,6 +49,15 @@ export default defineComponent({
 
     onClickRemove(item: Room) {
       this.$emit('remove:room', item)
+    },
+
+    getList() {
+      // axios.get('')
+      //   .then((res) => {
+      //     // { status }
+
+      //     // this.dataAPIList = 
+      //   })
     }
   }
 })

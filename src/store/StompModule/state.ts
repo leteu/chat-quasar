@@ -2,7 +2,8 @@ import { Client } from 'webstomp-client';
 
 export interface Room {
   id : number
-  name : string
+  name : string,
+  private: boolean
 }
 
 export interface ExampleStateInterface {

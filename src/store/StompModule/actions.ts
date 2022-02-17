@@ -49,13 +49,8 @@ const actions: ActionTree<ExampleStateInterface, StateInterface> = {
 
   SubscribeRoomList(context) {
     return new Promise<void>((resolve, reject) => {
-      Loading.show({
-        spinner: QSpinnerHourglass
-      })
-
       RoomListSub = stomp?.subscribe("/sub/room/list", res => {
         context.commit('setRoomListState', JSON.parse(res.body));
-        Loading.hide();
         resolve();
       })
     })
