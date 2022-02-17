@@ -2,13 +2,18 @@
   <q-list bordered separator class="full-height">
     <template v-for="(item, index) in !dataList.length ? dataAPIList : dataList" :key="`roomId-${item.id}`">
       <q-item clickable @click="evt => onClickRoom(evt, item)">
-        <q-item-section class="ell_wrap">
+        <q-item-section class="ell_wrap text-weight-bold">
           {{item.name}}
         </q-item-section>
         <q-item-section side>
           <div class="flex items-center justify-end q-gutter-x-md fs-130">
             <span>
-              <q-icon :name="item.private ? 'lock' : 'mdi-lock-open-variant'" />
+              <q-icon
+                :name="item.private ? 'lock' : 'mdi-lock-open-variant'"
+                :color="!item.private
+                          ? $q.dark.isActive ? 'grey-9' : 'grey-4'
+                          : ''"
+              />
             </span>
 
             <span>
@@ -42,9 +47,6 @@ export default defineComponent({
       dataAPIList: [],
     }
   },
-  async created() {
-    this.getList();
-  },
   computed: {
     dataList: function () {
       return this.$store.getters['StompModule/getRoomListData'];
@@ -57,15 +59,6 @@ export default defineComponent({
 
     onClickRemove(item: Room) {
       this.$emit('remove:room', item)
-    },
-
-    getList() {
-      // axios.get('')
-      //   .then((res) => {
-      //     // { status }
-
-      //     // this.dataAPIList = 
-      //   })
     }
   }
 })
