@@ -42,7 +42,6 @@ export default route<StateInterface>(function (/* { store, ssrContext } */) {
 
     if(to.matched.some(record => record.meta.ChatPage)){
       if(!!to.params?.roomId) {
-        console.log(store);
         if(!store.getters['StompModule/getConnectStatus']) {
           next('/');
           return;
