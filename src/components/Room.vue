@@ -124,6 +124,8 @@ export default defineComponent({
         deep: true
       }
     );
+
+    window.addEventListener('beforeunload', this.leave)
   },
   methods: {
     onClickSend() {
@@ -137,6 +139,11 @@ export default defineComponent({
         this.$data.message = '';
       }
     },
+    leave(event: any) {
+      this.$store.dispatch('StompModule/UnSubscribeRoom');
+      this.$store.dispatch('StompModule/UnSubscribeUserInfo');
+      this.$store.commit('StompModule/setCurrenRoomState', null);
+    }
   },
   beforeRouteLeave(to, from, next) {
     this.$store.dispatch('StompModule/UnSubscribeRoom');
@@ -144,5 +151,8 @@ export default defineComponent({
     this.$store.commit('StompModule/setCurrenRoomState', null);
     next();
   },
+  beforeUnmount() {
+    window.removeEventListener('beforeunload', this.leave)
+  }
 })
 </script>

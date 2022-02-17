@@ -81,7 +81,7 @@ const actions: ActionTree<ExampleStateInterface, StateInterface> = {
   },
 
   SubscribeUserInfo(context, roomId) {
-    UserInfoSub = stomp?.subscribe(`sub/chat/user/room/${roomId}`, res => {
+    UserInfoSub = stomp?.subscribe(`/sub/chat/user/room/${roomId}`, res => {
       console.log(JSON.parse(res.body));
       context.commit('setUserInfo', JSON.parse(res.body));
     })
