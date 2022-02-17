@@ -27,6 +27,11 @@
   word-wrap: normal;
 }
 
+.word_warp {
+  max-width: inherit;
+  word-break: break-word;
+}
+
 .height-inherit { height: inherit !important; }
 .max-height-inherit { max-height: inherit !important; }
 .min-height-inherit { min-height: inherit !important; }
