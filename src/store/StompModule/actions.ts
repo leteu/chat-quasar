@@ -7,6 +7,7 @@ import Stomp, { Client, Subscription } from 'webstomp-client';
 import SockJS from 'sockjs-client';
 import API_URL from 'src/assets/common/config';
 import SocketLoadingDialog from 'src/components/SocketLoadingDialog.vue';
+import axios from 'axios';
 
 const socket = new SockJS(API_URL+'socket');
 const stomp = Stomp.over(socket) as Client;
@@ -14,7 +15,7 @@ stomp.debug = () => {};
 
 let RoomListSub: Subscription;
 let RoomSub: Subscription;
-
+let UserInfoSub: Subscription;
 
 
 const actions: ActionTree<ExampleStateInterface, StateInterface> = {
@@ -65,16 +66,35 @@ const actions: ActionTree<ExampleStateInterface, StateInterface> = {
 
       RoomSub = stomp?.subscribe(`/sub/chat/room/${roomId}`, res => {
         context.commit('pushChatListState', JSON.parse(res.body));
-        context.commit('setUserInfo', JSON.parse(res.body).userInfo)
         Loading.hide();
         resolve();
+      });
+
+      context.commit('setRandomName');
+
+      axios.post('/chat/room/in', {
+        roomId,
+        userName: context.getters.getRandomName,
+        userId: RoomSub.id
       })
+    })
+  },
+
+  SubscribeUserInfo(context, roomId) {
+    UserInfoSub = stomp?.subscribe(`sub/chat/user/room/${roomId}`, res => {
+      console.log(JSON.parse(res.body));
+      context.commit('setUserInfo', JSON.parse(res.body));
     })
   },
 
   UnSubscribeRoom(context) {
     RoomSub?.unsubscribe();
     context.commit('resetChatListState');
+  },
+
+  UnSubscribeUserInfo(context) {
+    UserInfoSub?.unsubscribe();
+    context.commit('resetUserInfo');
   },
 
   sendMsgRoom(context, { message, roomId }) {
@@ -87,10 +107,6 @@ const actions: ActionTree<ExampleStateInterface, StateInterface> = {
       stomp.send("/pub/chat/room", JSON.stringify(msg), {});
     }
   },
-
-  JoinRoom(context) {
-    context.commit('setRandomName');
-  }
 };
 
 export default actions;

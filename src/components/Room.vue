@@ -1,24 +1,60 @@
 <template>
-  <div class="q-pa-lg q-gutter-y-sm column height-inherit">
+  <div class="q-pa-lg q-gutter-y-sm column full-height">
     <div class="flex justify-between items-center">
       <div class="text-h6 text-primary">
         {{ $store.getters['StompModule/getCurrentRoomName'].name }}
       </div>
-      <q-btn
-        dense
-        color="dark"
-        icon="clear"
-        @click="leaveRoom()"
-      />
+      <div class="flex items-center justify-start q-gutter-x-sm">
+        <q-btn
+          dense
+          outline
+          icon="people"
+        >
+          <q-menu class="width-150px">
+            <q-list dense bordered separator>
+              <q-item dense>
+                <q-item-section class="flex items-center justify-start">
+                  <span><span class="text-bold q-mr-sm">접속자 : </span>{{userInfo.length}}</span>
+                </q-item-section>
+              </q-item>
+              <q-item v-for="(user, index) in userInfo" :key="`user-${index}`" dense>
+                <q-item-section>
+                  {{user.userName}}
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </q-btn>
+
+        <q-btn
+          dense
+          outline
+          icon="clear"
+          @click="() => { $router.push('/') }"
+        />
+      </div>
     </div>
 
     <q-card flat square bordered class="col">
-      <q-card-section class="scroll-y full-height">
-        <div class="relative-position" v-for="(item, index) in dataList" :key="`chat-${index}`">
-          <div class="text-bold small-font">{{item.userName}}</div>
-          <div>
-            {{item.content}}
-          </div>
+      <q-card-section class="q-py-xs scroll-y full-height chat-box">
+        <div class="relative-position q-my-xs" v-for="(item, index) in dataList" :key="`chat-${index}`">
+          <template v-if="item.type === 'notice'">
+            <div class="text-center">
+              <div class="text-grey-6 fs-85">
+                <span class="text-bold">{{item.userName}}</span> 
+                {{ item.content }}
+              </div>
+            </div>
+          </template>
+          <template v-else>
+            <div class="small-font">
+              <span class="text-bold q-mr-sm">{{item.userName}}</span>
+              <span class="text-grey-8 fs-85">{{item.date}}</span>
+            </div>
+            <div class="word_warp">
+              {{item.content}}
+            </div>
+          </template>
         </div>
       </q-card-section>
     </q-card>
@@ -52,6 +88,8 @@
 <script lang="ts">
 import axios from 'axios';
 import { QInput } from 'quasar';
+import getters from 'src/store/StompModule/getters';
+import { Chat, UserInfo } from 'src/store/StompModule/state';
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -62,24 +100,32 @@ export default defineComponent({
   },
   created() {
     if(this.$store.getters['StompModule/getConnectStatus']) {
+      this.$store.dispatch('StompModule/SubscribeUserInfo', this.$route.params.roomId)
       this.$store.dispatch('StompModule/SubscribeRoom', this.$route.params.roomId)
     }
-    this.sendJoinRoom();
   },
   computed: {
-    dataList: function () {
+    dataList: function (): Chat[] {
       return this.$store.getters['StompModule/getChatList'];
     },
+    userInfo: function(): UserInfo[] {
+      return this.$store.getters['StompModule/getUserInfo'];
+    }
+  },
+  mounted() {
+    this.$store.watch(
+      (state, getters) => getters['StompModule/getChatList'],
+      (newVal, oldVal) => {
+        const chatBox = document.querySelector('.chat-box');
+
+        chatBox?.scrollTo(0, chatBox.scrollHeight);
+      },
+      {
+        deep: true
+      }
+    );
   },
   methods: {
-    sendJoinRoom() {
-      this.$store.dispatch('StompModule/JoinRoom');
-      axios.post('/chat/room/in', {
-        roomId: this.$route.params.roomId,
-        userName: this.$store.getters['StompModule/getRandomName']
-      })
-    },
-
     onClickSend() {
       if((this.$refs.messageInput as QInput).validate()) {
         this.$store.dispatch('StompModule/sendMsgRoom',
@@ -91,17 +137,11 @@ export default defineComponent({
         this.$data.message = '';
       }
     },
-
-    leaveRoom() {
-      this.$store.dispatch('StompModule/UnSubscribeRoom');
-      this.$router.push('/');
-    }
   },
-  watch: {
-    '$route': function(to, from) {
-      this.$store.dispatch('StompModule/UnSubscribeRoom');
-    }
-  }
+  beforeRouteLeave(to, from, next) {
+    this.$store.dispatch('StompModule/UnSubscribeRoom');
+    this.$store.dispatch('StompModule/UnSubscribeUserInfo');
+    next();
+  },
 })
 </script>
-

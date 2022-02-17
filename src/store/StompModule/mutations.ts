@@ -40,7 +40,11 @@ const mutation: MutationTree<ExampleStateInterface> = {
 
   setRandomName (state) {
     state.randomName = `익명-${Math.floor(Math.random() * 1000)}`;
-  }
+  },
+
+  resetUserInfo(state) {
+    state.userInfo = [];
+  },
 };
 
 export default mutation;
