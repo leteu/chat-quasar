@@ -167,15 +167,19 @@ export default defineComponent({
 
     keyPush(evt: KeyboardEvent) {
       switch (evt.keyCode) {
+        case 65:
         case 37:
           this.move = { x: -1, y: 0 }
           break;
+        case 87:
         case 38:
           this.move = { x: 0, y: -1 }
           break;
+        case 68:
         case 39:
           this.move = { x: 1, y: 0 }
           break;
+        case 83:
         case 40:
           this.move = { x: 0, y: 1 }
           break;
