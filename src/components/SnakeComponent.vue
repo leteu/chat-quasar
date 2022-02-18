@@ -1,6 +1,5 @@
 <template>
-  <!-- <canvas id="gc" width="400" height="400"></canvas> -->
-  <canvas id="gc"></canvas>
+  <canvas id="gc" v-touch-swipe="touchSwipe"></canvas>
 </template>
 
 <script lang="ts">
@@ -35,30 +34,59 @@ export default defineComponent({
       trailArr: [] as { x: number, y: number }[],
       tail: defaultTail,
 
-      gameStatus: false
+      gameStatus: false,
+
+      max: {
+        width: 0,
+        height: 0
+      }
     }
   },
   mounted() {
     canvas = document.getElementById("gc") as HTMLCanvasElement;
     ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-    document.addEventListener("keydown", this.keyPush);
-    document.addEventListener("keydown", this.startGame);
 
-    canvas.width = (canvas?.parentElement?.offsetWidth as number) - 24;
-    canvas.height = (canvas?.parentElement?.offsetHeight as number) - 24;
-
+    this.addEvent();
+    this.resetSize();
     this.resetMap();
   },
 
   beforeUnmount() {
-    document.removeEventListener("keydown", this.keyPush);
-    document.removeEventListener("keydown", this.startGame);
-    clearInterval(gameInterval);
+    this.removeEvent();
   },
 
   methods: {
-    startGame(evt: KeyboardEvent) {
-      if([ 37, 38, 39, 40 ].includes(evt.keyCode) && !this.gameStatus) {
+    addEvent() {
+      window.addEventListener('resize', this.resetSize);
+      document.addEventListener("keydown", this.keyPush);
+      canvas.addEventListener("click", this.startGame);
+    },
+
+    removeEvent() {
+      window.removeEventListener('resize', this.resetSize);
+      document.removeEventListener("keydown", this.keyPush);
+      canvas.removeEventListener("click", this.startGame);
+      clearInterval(gameInterval);
+    },
+
+    resetSize() {
+      if(window.innerWidth <= 768) {
+        canvas.width = (canvas?.parentElement?.offsetWidth as number);
+        canvas.height = (canvas?.parentElement?.offsetHeight as number);
+      } else {
+        canvas.width = (canvas?.parentElement?.offsetWidth as number) - 24;
+        canvas.height = (canvas?.parentElement?.offsetHeight as number) - 24;
+      }
+
+      this.max = {
+        width: (canvas.width / this.size) - 1,
+        height: (canvas.height / this.size) - 1
+      }
+    },
+
+    startGame() {
+      if(!this.gameStatus) {
+        this.move = { x: 1, y: 0 };
         gameInterval = setInterval(this.game, 1000/15);
         this.gameStatus = true;
       }
@@ -75,15 +103,15 @@ export default defineComponent({
       this.player.y += this.move.y;
 
       if (this.player.x < 0) {
-        this.player.x = 40 - 1;
+        this.player.x = this.max.width;
       }
-      if (this.player.x > 40 - 1) {
+      if (this.player.x > this.max.width) {
         this.player.x = 0;
       }
       if (this.player.y < 0) {
-        this.player.y = 40 - 1;
+        this.player.y = this.max.height;
       }
-      if (this.player.y > 40 - 1) {
+      if (this.player.y > this.max.height) {
         this.player.y = 0;
       }
 
@@ -92,8 +120,8 @@ export default defineComponent({
       // 점수
       if ((this.score.x === this.player.x) && (this.score.y === this.player.y)) {
         this.tail++;
-        this.score.x = Math.floor(Math.random() * this.size);
-        this.score.y = Math.floor(Math.random() * this.size);
+        this.score.x = Math.floor(Math.random() * this.size - 2);
+        this.score.y = Math.floor(Math.random() * this.size - 2);
       }
 
       ctx.fillStyle = "red";
@@ -141,6 +169,23 @@ export default defineComponent({
           this.move = { x: 1, y: 0 }
           break;
         case 40:
+          this.move = { x: 0, y: 1 }
+          break;
+      }
+    },
+
+    touchSwipe({direction}: { direction: 'up' | 'down' | 'left' | 'right' }) {
+      switch (direction) {
+        case 'left':
+          this.move = { x: -1, y: 0 }
+          break;
+        case 'up':
+          this.move = { x: 0, y: -1 }
+          break;
+        case 'right':
+          this.move = { x: 1, y: 0 }
+          break;
+        case 'down':
           this.move = { x: 0, y: 1 }
           break;
       }
