@@ -24,6 +24,17 @@ const routes: RouteRecordRaw[] = [
     ],
   },
 
+  {
+    path: '/snake-game',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('pages/GameLoby.vue')
+      }
+    ]
+  },
+
   // Always leave this as last one,
   // but you can also remove it
   {

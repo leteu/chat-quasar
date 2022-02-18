@@ -25,14 +25,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style lang="sass" scoped>
-#container
-  width: 50%
-  margin: 0 auto
-
-@media screen and (max-width: 768px)
-  #container
-    width: 100%
-    margin: 0 auto
-</style>
