@@ -74,8 +74,8 @@ export default defineComponent({
         canvas.width = (canvas?.parentElement?.offsetWidth as number);
         canvas.height = (canvas?.parentElement?.offsetHeight as number);
       } else {
-        canvas.width = (canvas?.parentElement?.offsetWidth as number) - 24;
-        canvas.height = (canvas?.parentElement?.offsetHeight as number) - 24;
+        canvas.width = (15 * Math.floor((canvas?.parentElement?.offsetWidth as number) / 15)) - 30;
+        canvas.height = (15 * Math.floor((canvas?.parentElement?.offsetHeight as number) / 15)) - 30;
       }
 
       this.max = {
@@ -96,6 +96,15 @@ export default defineComponent({
     resetMap() {
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+    },
+
+    getScorePosition() {
+      const position = {
+        x: Math.floor(Math.random() * ((canvas.width / 15) - 1)),
+        y: Math.floor(Math.random() * ((canvas.height / 15) - 1))
+      };
+
+      return position;
     },
 
     game() {
@@ -120,10 +129,9 @@ export default defineComponent({
       // 점수
       if ((this.score.x === this.player.x) && (this.score.y === this.player.y)) {
         this.tail++;
-        this.score.x = Math.floor(Math.random() * this.size - 2) < 0 ? 0 : Math.floor(Math.random() * this.size - 2);
-        this.score.y = Math.floor(Math.random() * this.size - 2) < 0 ? 0 : Math.floor(Math.random() * this.size - 2);
+        this.$data.score = this.getScorePosition();
       }
-
+      
       ctx.fillStyle = "red";
       ctx.fillRect(
         this.score.x * this.size,
