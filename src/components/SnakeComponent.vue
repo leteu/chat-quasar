@@ -71,8 +71,8 @@ export default defineComponent({
 
     resetSize() {
       if(window.innerWidth <= 768) {
-        canvas.width = (canvas?.parentElement?.offsetWidth as number);
-        canvas.height = (canvas?.parentElement?.offsetHeight as number);
+        canvas.width = (15 * Math.floor((canvas?.parentElement?.offsetWidth as number) / 15));
+        canvas.height = (15 * Math.floor((canvas?.parentElement?.offsetHeight as number) / 15));
       } else {
         canvas.width = (15 * Math.floor((canvas?.parentElement?.offsetWidth as number) / 15)) - 30;
         canvas.height = (15 * Math.floor((canvas?.parentElement?.offsetHeight as number) / 15)) - 30;
