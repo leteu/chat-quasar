@@ -120,8 +120,8 @@ export default defineComponent({
       // 점수
       if ((this.score.x === this.player.x) && (this.score.y === this.player.y)) {
         this.tail++;
-        this.score.x = Math.floor(Math.random() * this.size - 2);
-        this.score.y = Math.floor(Math.random() * this.size - 2);
+        this.score.x = Math.floor(Math.random() * this.size - 2) < 0 ? 0 : Math.floor(Math.random() * this.size - 2);
+        this.score.y = Math.floor(Math.random() * this.size - 2) < 0 ? 0 : Math.floor(Math.random() * this.size - 2);
       }
 
       ctx.fillStyle = "red";
