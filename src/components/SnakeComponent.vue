@@ -81,7 +81,9 @@ export default defineComponent({
       this.max = {
         width: (canvas.width / this.size) - 1,
         height: (canvas.height / this.size) - 1
-      }
+      };
+
+      this.resetMap();
     },
 
     startGame() {
@@ -126,11 +128,6 @@ export default defineComponent({
 
       this.resetMap();
 
-      ctx.font = "15px Arial";
-      ctx.fillStyle = "white";
-      ctx.textAlign = "right";
-      ctx.fillText(`Score: ${this.tail}`, canvas.width - 9, 20);
-
       // 점수
       if ((this.score.x === this.player.x) && (this.score.y === this.player.y)) {
         this.tail++;
@@ -168,6 +165,11 @@ export default defineComponent({
       while (this.trailArr.length > this.tail) {
         this.trailArr.shift();
       }
+
+      ctx.font = "15px Arial";
+      ctx.fillStyle = "white";
+      ctx.textAlign = "right";
+      ctx.fillText(`Score: ${this.tail}`, canvas.width - 9, 20);
     },
 
     keyPush(evt: KeyboardEvent) {
