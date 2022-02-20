@@ -15,8 +15,7 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
-    "src/**/*.vue",
-    "types/type.sideNav.d.ts"
+    "src/**/*.vue"
   ],
   "exclude": [
     "node_modules"
