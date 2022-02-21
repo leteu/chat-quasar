@@ -2,11 +2,14 @@
   <div class="column q-gutter-y-md">
     <q-card bordered>
       <q-card-section class="flex items-center justify-between q-gutter-x-xl">
-        <YachtDice :diceValue="dice.first.value"  :fixed="dice.first.fixed"  :roll="dice.first.roll"  @click="fixedDice(dice.first)" />
-        <YachtDice :diceValue="dice.second.value" :fixed="dice.second.fixed" :roll="dice.second.roll" @click="fixedDice(dice.second)" />
-        <YachtDice :diceValue="dice.third.value"  :fixed="dice.third.fixed"  :roll="dice.third.roll"  @click="fixedDice(dice.third)" />
-        <YachtDice :diceValue="dice.fourth.value" :fixed="dice.fourth.fixed" :roll="dice.fourth.roll" @click="fixedDice(dice.fourth)" />
-        <YachtDice :diceValue="dice.fifth.value"  :fixed="dice.fifth.fixed"  :roll="dice.fifth.roll"  @click="fixedDice(dice.fifth)" />
+        <template v-for="(item, index) in ['first', 'second', 'third', 'fourth', 'fifth']" :key="`roll-dice-${index}`">
+          <YachtDice
+            :diceValue="dice[item].value"
+            :fixed="dice[item].fixed"
+            :roll="dice[item].roll"
+            @click="fixedDice(dice[item])"
+          />
+        </template>
       </q-card-section>
     </q-card>
     <div class="text-center">
@@ -61,26 +64,31 @@ export default defineComponent({
     };
   },
   methods: {
-    async rollDice() {
+    rollDice() {
       this.$data.times += 1;
 
-      this.$data.dice.first.roll = true;
-      this.$data.dice.second.roll = true;
-      this.$data.dice.third.roll = true;
-      this.$data.dice.fourth.roll = true;
-      this.$data.dice.fifth.roll = true;
+      this.rollDiceEach(this.$data.dice.first);
+      this.rollDiceEach(this.$data.dice.second);
+      this.rollDiceEach(this.$data.dice.third);
+      this.rollDiceEach(this.$data.dice.fourth);
+      this.rollDiceEach(this.$data.dice.fifth);
+    },
 
-      await delay(1);
-
-      this.$data.dice.first.roll = false;
-      this.$data.dice.second.roll = false;
-      this.$data.dice.third.roll = false;
-      this.$data.dice.fourth.roll = false;
-      this.$data.dice.fifth.roll = false;
+    async rollDiceEach(who: { value: number; fixed: boolean; roll: boolean; }) {
+      if(!who.fixed){
+        who.roll = true;
+        await delay(1);
+        who.value = this.getRandomFace();
+        who.roll = false;
+      }
     },
 
     fixedDice(dice: { value: number; fixed: boolean; roll: boolean; }) {
       dice.fixed = !dice.fixed;
+    },
+
+    getRandomFace() {
+      return Math.floor(Math.random() * (6 - 1) - 1)
     }
   }
 })
