@@ -1,4 +1,5 @@
 import { defineComponent, h } from 'vue';
+import YachtDiceFace from './YachtDiceFace';
 
 export default defineComponent({
   props: {
@@ -6,23 +7,26 @@ export default defineComponent({
       type: Number,
       validator: (val:number) => val >= 1 && val <=6,
       required: true
+    },
+    roll: {
+      type: Boolean
     }
   },
   setup(props) {
-    const dotElement = Array.from(
-      {
-        length: props.diceValue
-      },
-      (_, index) => index+1
-    ).map(dot => {
-      return h('div', { class: 'dice-face__dot round-radius' }) 
-    });
+
 
     return () => h('div',
       {
-        class: `dice-face dice-face__${props.diceValue}`
+        class: `dice dice__show-${props.diceValue} ${props.roll ? 'roll-dice' : ''}`
       },
-      dotElement
+      [
+        h(YachtDiceFace, { diceValue: 1 }),
+        h(YachtDiceFace, { diceValue: 2 }),
+        h(YachtDiceFace, { diceValue: 3 }),
+        h(YachtDiceFace, { diceValue: 4 }),
+        h(YachtDiceFace, { diceValue: 5 }),
+        h(YachtDiceFace, { diceValue: 6 }),
+      ]
     )
   }
 })

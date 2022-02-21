@@ -1,30 +1,56 @@
+.dice
+  width: 100px
+  height: 100px
+  position: relative
+  transform-style: preserve-3d
+  &__show-1
+    transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg)
+  &__show-2
+    transform: rotateX(90deg) rotateY(0deg) rotateZ(90deg)
+  &__show-3
+    transform: rotateX(90deg) rotateY(0deg) rotateZ(0deg)
+  &__show-4
+    transform: rotateX(90deg) rotateY(0deg) rotateZ(180deg)
+  &__show-5
+    transform: rotateX(0deg) rotateY(90deg) rotateZ(0deg)
+  &__show-6
+    transform: rotateX(180deg) rotateY(0deg) rotateZ(180deg)
 
+.roll-dice
+  animation: spin 1s linear infinite
+  transition: transform 0.8s
+  transform-origin: center
 
 .dice-face
+  position: absolute
+  top: 0
+  left: 0
   width: 100px
   height: 100px
   background-color: #e7e7e7
   object-fit: contain
-  border-radius: 10%
-  box-shadow: inset 0 5px white, inset 0 -5px #bbb,inset 5px 0 #d7d7d7, inset -5px 0 #d7d7d7
+  border: 1px solid #333
   display: flex
   justify-content: space-between
   &__dot
     display: block
     width: 20px
     height: 20px
-    background-color: #333
-    box-shadow: inset 20px 20px 5px #111, inset -20px -20px -5px #555
+    background-color: #676767
+    box-shadow: inset -0.15rem 0.15rem 0.25rem rgba(0, 0, 0, 0.5)
   &__1
     align-items: center
     justify-content: center
+    transform: rotateY(0deg) translateZ(50px)
   &__2
     padding: 20px
+    transform: rotateY(90deg) translateZ(50px)
     > div
       &:last-child
         align-self: flex-end
   &__3
     padding: 15px
+    transform: rotateX(-90deg) translateZ(50px)
     > div
       &:nth-child(2)
         align-self: center
@@ -36,11 +62,13 @@
     grid-template-columns: 40px 40px
     align-items: center
     justify-items: center
+    transform: rotateX(90deg) translateZ(50px)
   &__5
     padding: 12px
     display: grid
     align-items: center
     justify-items: center
+    transform: rotateY(-90deg) translateZ(50px)
     >div
       &:nth-child(1)
         grid-column: 1
@@ -58,4 +86,10 @@
     grid-template-columns: 40px 40px
     align-items: center
     justify-items: center
+    transform: rotateY(180deg) translateZ(50px)
 
+@keyframes spin
+  0%
+    transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg)
+  100%
+    transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg)

@@ -1,5 +1,5 @@
 <template>
-  <div class="q-gutter-x-sm flex justify-start items-center">
+  <div class="full-width height-200px flex items-center justify-between">
     <YachtDice :diceValue="1" />
     <YachtDice :diceValue="2" />
     <YachtDice :diceValue="3" />
@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import YachtDice from './YachtDice';
+import YachtDice from './YachtDice'
 
 export default defineComponent({
   components: {
