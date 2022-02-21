@@ -25,12 +25,22 @@ const routes: RouteRecordRaw[] = [
   },
 
   {
-    path: '/snake-game',
+    path: '/game',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
-        path: '',
+        path: 'loby',
         component: () => import('pages/GameLoby.vue')
+      },
+      {
+        name: 'snakeGame',
+        path: 'snake-game',
+        component: () => import('pages/SnakeGame.vue')
+      },
+      {
+        name: 'yacht',
+        path: 'yacht',
+        component: () => import('pages/Yacht.vue')
       }
     ]
   },

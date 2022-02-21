@@ -1,4 +1,4 @@
-import { useQuasar, DialogChainObject, Loading, QSpinnerHourglass, Dialog } from 'quasar';
+import { Loading, QSpinnerHourglass, Dialog } from 'quasar';
 import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
 import { ExampleStateInterface } from './state';
