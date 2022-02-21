@@ -1,5 +1,5 @@
 <template>
-  <div class="column q-gutter-y-md">
+  <div class="column">
     <q-card bordered>
       <q-card-section class="flex items-center justify-between q-gutter-x-xl">
         <template v-for="(item, index) in ['first', 'second', 'third', 'fourth', 'fifth']" :key="`roll-dice-${index}`">
@@ -12,7 +12,7 @@
         </template>
       </q-card-section>
     </q-card>
-    <div class="text-center">
+    <div class="text-center q-mt-sm">
       <q-btn label="굴리기" color="primary" @click="rollDice()" :disable="times === 3" />
       <span class="q-ml-md fs-125 text-weight-bold text-vertical-bottom">
         {{ times }} / 3
@@ -64,7 +64,7 @@ export default defineComponent({
     };
   },
   methods: {
-    rollDice() {
+    async rollDice() {
       this.$data.times += 1;
 
       this.rollDiceEach(this.$data.dice.first);
@@ -72,6 +72,16 @@ export default defineComponent({
       this.rollDiceEach(this.$data.dice.third);
       this.rollDiceEach(this.$data.dice.fourth);
       this.rollDiceEach(this.$data.dice.fifth);
+
+      await delay(1);
+
+      this.$emit('update:diceValue', {
+        first: this.$data.dice.first.value,
+        second: this.$data.dice.second.value,
+        third: this.$data.dice.third.value,
+        fourth: this.$data.dice.fourth.value,
+        fifth: this.$data.dice.fifth.value
+      });
     },
 
     async rollDiceEach(who: { value: number; fixed: boolean; roll: boolean; }) {
@@ -88,7 +98,7 @@ export default defineComponent({
     },
 
     getRandomFace() {
-      return Math.floor(Math.random() * (6 - 1) - 1)
+      return Math.floor(Math.random() * (6 - 1) + 1)
     }
   }
 })
