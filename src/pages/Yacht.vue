@@ -1,5 +1,5 @@
 <template>
-  <div id="container">
+  <div id="container-yacht">
     <div class="height-full full-width flex items-center justify-center">
       <Yacht />
     </div>

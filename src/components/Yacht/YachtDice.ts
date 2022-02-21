@@ -10,6 +10,9 @@ export default defineComponent({
     },
     roll: {
       type: Boolean
+    },
+    fixed: {
+      type: Boolean
     }
   },
   setup(props) {
@@ -17,7 +20,7 @@ export default defineComponent({
 
     return () => h('div',
       {
-        class: `dice dice__show-${props.diceValue} ${props.roll ? 'roll-dice' : ''}`
+        class: `dice dice__show-${props.diceValue} ${props.roll ? 'roll-dice' : ''} ${ props.fixed ? 'dice__fixed' : '' }`
       },
       [
         h(YachtDiceFace, { diceValue: 1 }),
