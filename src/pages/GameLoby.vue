@@ -45,6 +45,11 @@ export default defineComponent({
         value: 'yacht',
         path: '/game/yacht'
       },
+      // {
+      //   label: '야바위',
+      //   value: 'monte',
+      //   path: '/game/monte'
+      // },
     ] as Game[];
 
     function goGame(name: string) {
