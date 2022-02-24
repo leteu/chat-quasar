@@ -98,7 +98,8 @@ export default defineComponent({
     },
 
     getRandomFace() {
-      return Math.floor(Math.random() * (6 - 1) + 1)
+      const random = window.crypto?.getRandomValues(new Uint32Array(1))[0]/4294967296;
+      return Math.floor(random * 6 + 1);
     }
   }
 })
