@@ -133,7 +133,7 @@ export default defineComponent({
         this.$store.dispatch('StompModule/sendMsgRoom',
           {
             message: this.$data.message,
-            roomId: this.$route.params.roomId
+            chatRoomId: this.$route.params.roomId
           }
         );
         this.$data.message = '';
