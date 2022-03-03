@@ -1,9 +1,20 @@
 import { RouteRecordRaw } from 'vue-router';
+import SignIn from 'src/pages/Auth/SignIn.vue';
 
 const routes: RouteRecordRaw[] = [
   {
+    path: '/auth',
+    component: () => import('layouts/AuthLayout.vue'),
+    meta: { chkIsLogin: true },
+    children: [
+      { path: "login", component: SignIn, name: "SignIn" },
+    ]
+  },
+
+  {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
+    meta: { requireAuth: true },
     children: [
       {
         path: '',
@@ -27,6 +38,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/game',
     component: () => import('layouts/MainLayout.vue'),
+    meta: { requireAuth: true },
     children: [
       {
         path: 'loby',
