@@ -35,6 +35,10 @@ const actions: ActionTree<ExampleStateInterface, StateInterface> = {
   },
   logout(context) {
     context.commit('setToken', null);
+  },
+
+  setHeaderAction(context, value) {
+    context.commit('setHeader', value);
   }
 };
 
