@@ -52,6 +52,10 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'yacht',
         path: 'yacht',
+        component: () => import('pages/YachtList.vue')
+      },
+      {
+        path: 'yacht/:roomId',
         component: () => import('pages/Yacht.vue')
       }
     ]
