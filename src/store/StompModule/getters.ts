@@ -7,6 +7,10 @@ const getters: GetterTree<ExampleStateInterface, StateInterface> = {
     return context.roomList;
   },
 
+  getYachtListData (context) {
+    return context.yachtList;
+  },
+
   returnStomp (context) {
     return context.stomp;
   },

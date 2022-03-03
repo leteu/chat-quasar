@@ -16,7 +16,7 @@ stomp.debug = () => {};
 let RoomListSub: Subscription;
 let RoomSub: Subscription;
 let UserInfoSub: Subscription;
-
+let YachtListSub: Subscription;
 
 const actions: ActionTree<ExampleStateInterface, StateInterface> = {
   connect(context) {
@@ -47,8 +47,18 @@ const actions: ActionTree<ExampleStateInterface, StateInterface> = {
 
   SubscribeRoomList(context) {
     return new Promise<void>((resolve, reject) => {
-      RoomListSub = stomp?.subscribe("/sub/room/list", res => {
+      RoomListSub = stomp?.subscribe("/sub/chatroom/list/GENERAL", res => {
         context.commit('setRoomListState', JSON.parse(res.body));
+        resolve();
+      })
+    })
+  },
+
+  SubscribeYachtList(context) {
+    return new Promise<void>((resolve, reject) => {
+      YachtListSub = stomp?.subscribe("/sub/chatroom/list/YAHTZEE", res => {
+        console.log(JSON.parse(res.body));
+        context.commit('setYachtListState', JSON.parse(res.body));
         resolve();
       })
     })
@@ -56,6 +66,10 @@ const actions: ActionTree<ExampleStateInterface, StateInterface> = {
 
   UnSubscribeRoomList(context) {
     RoomListSub?.unsubscribe();
+  },
+
+  UnSubscribeYatchList(context) {
+    YachtListSub?.unsubscribe();
   },
 
   SubscribeRoom(context, roomId) {

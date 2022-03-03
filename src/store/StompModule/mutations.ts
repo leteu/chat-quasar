@@ -18,6 +18,10 @@ const mutation: MutationTree<ExampleStateInterface> = {
     state.roomList = value;
   },
 
+  setYachtListState(state, value) {
+    state.yachtList = value;
+  },
+
   setConnectStatus(state, value:boolean) {
     state.connectStatus = value;
   },
@@ -36,6 +40,10 @@ const mutation: MutationTree<ExampleStateInterface> = {
 
   setCurrenRoomState(state, value) {
     state.currentRoom = value
+  },
+
+  setCurrenYatchState(state, value) {
+    state.currentYacht = value
   },
 
   setRandomName (state) {
