@@ -7,6 +7,11 @@
           익명 채팅
         </q-toolbar-title>
       </q-toolbar>
+
+      <q-tabs align="left" dense>
+        <q-route-tab to="/" label="채팅" />
+        <q-route-tab to="/game/loby" label="게임" />
+      </q-tabs>
     </q-header>
 
     <q-page-container>
