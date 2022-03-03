@@ -38,11 +38,11 @@
     <q-card flat square bordered class="col">
       <q-card-section class="q-py-xs scroll-y full-height chat-box">
         <div class="relative-position q-my-xs" v-for="(item, index) in dataList" :key="`chat-${index}`">
-          <template v-if="item.type === 'notice'">
+          <template v-if="item.authority === 'notice'">
             <div class="text-center">
               <div class="text-grey-6 fs-85">
                 <span class="text-bold">{{item.userName}}</span> 
-                {{ item.content }}
+                {{ item.messageContent }}
               </div>
             </div>
           </template>
@@ -52,7 +52,7 @@
               <span class="text-grey-8 fs-85">{{item.date}}</span>
             </div>
             <div class="word_warp">
-              {{item.content}}
+              {{item.messageContent}}
             </div>
           </template>
         </div>
