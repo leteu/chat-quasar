@@ -65,7 +65,7 @@ export default defineComponent({
     },
 
     removeRoom(item: Room) {
-      axios.delete(`${item.chatRoomId}/room`)
+      axios.delete(`${item.chatRoomId}/chatroom`)
         .then(() => {
           this.$q.notify({
             message: '삭제되었습니다.',
