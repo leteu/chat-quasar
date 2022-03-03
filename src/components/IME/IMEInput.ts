@@ -46,6 +46,9 @@ export default defineComponent({
     clearable: {
       type: Boolean,
       default: false
+    },
+    type: {
+      type: String
     }
   },
   emits: ['update:modelValue', 'clear'],
@@ -133,12 +136,13 @@ export default defineComponent({
         clearable: false
       },
       {
-        control: () => h('input',
+        control: () => h(props.type === 'textarea' ? 'textarea' : 'input',
           {
             type: 'text',
             'model-value': inputText.value,
             onInput: (evt: Event) => emitEvtValue(evt),
-            class: `q-field__input q-placeholder ${props.inputClass}`,
+            class: `${props.type === 'textarea' ? 'q-field__native' : 'q-field__input'} q-placeholder ${props.inputClass}`,
+            rows: props.type === 'textarea' ? 6 : void 0,
             style: `${props.inputStyle}`,
             placeholder: props.placeholder,
             readonly: props.readonly,
