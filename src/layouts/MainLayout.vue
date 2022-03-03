@@ -6,6 +6,26 @@
         <q-toolbar-title>
           익명 채팅
         </q-toolbar-title>
+
+        <q-btn
+          dense
+          flat
+          class="bg-white q-pa-none"
+          text-color="dark"
+          @click.prevent="() => {userChip = !userChip}"
+          rounded
+          icon="account_circle"
+          :icon-right="userChip ? 'arrow_drop_up' : 'arrow_drop_down'"
+          style="min-width: 100px"
+        >
+          <span class="q-mx-sm text-weight-bold">
+            {{decodeToken().name}}
+          </span>
+
+          <q-menu :offset="[-2, 5]">
+            <UserInfo />
+          </q-menu>
+        </q-btn>
       </q-toolbar>
 
       <q-tabs align="left" dense>
@@ -31,6 +51,7 @@
 
 <script lang="ts">
 import EssentialLink from 'components/EssentialLink.vue'
+import UserInfo from 'src/components/UserInfo.vue';
 
 const linksList = [
   {
@@ -83,13 +104,16 @@ export default defineComponent({
   name: 'MainLayout',
 
   components: {
-    EssentialLink
+    EssentialLink,
+    UserInfo
   },
 
   setup () {
     const leftDrawerOpen = ref(false);
+    const userChip = ref(false);
 
     return {
+      userChip,
       essentialLinks: linksList,
       leftDrawerOpen,
       toggleLeftDrawer () {
