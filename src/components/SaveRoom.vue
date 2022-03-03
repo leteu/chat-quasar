@@ -14,7 +14,7 @@
             square
             outlined
             v-model="roomTitle"
-            :rules="[val => !!val && !!val?.id || '']"
+            :rules="[val => !!val && !!val.trim() || '']"
             class="hideErrorMessageSlot"
             hide-bottom-space
           />
@@ -28,7 +28,7 @@
               dense
               square
               outlined
-              v-model="private"
+              v-model="$data.private"
               @update:model-value="() => password = ''"
             />
           </div>
@@ -38,7 +38,7 @@
             outlined
             v-model="password"
             placeholder="비밀번호"
-            v-if="private"
+            v-if="$data.private"
           />
         </div>
       </q-card-section>
@@ -60,6 +60,13 @@ import { QDialog } from 'quasar'
 import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
+  props: {
+    roomType: {
+      type: String,
+      validator: (val: string) => ['GENERAL', 'YAHTZEE'].includes(val),
+      default: 'GENERAL'
+    }
+  },
   data() {
     return {
       roomTitle: '',
@@ -77,7 +84,7 @@ export default defineComponent({
     },
 
     onClickSubmit() {
-      axios.post('room', { roomName: this.roomTitle, password: this.password||null })
+      axios.put('chatroom', { roomName: this.roomTitle, password: this.password||null, type: this.$props.roomType })
         .then(({status}) => {
           if(status === 200) {
             this.hide();
