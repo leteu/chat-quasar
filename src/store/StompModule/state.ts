@@ -20,15 +20,17 @@ export interface UserInfo {
 
 export interface ExampleStateInterface {
   prop: boolean;
-  stomp: Client | null,
-  roomList: Room[],
-  yachtList: Room[],
-  connectStatus: boolean,
-  chatlist: Chat[],
-  currentRoom: Room | null,
-  currentYacht: Room | null,
-  randomName: string,
-  userInfo: UserInfo[],
+  stomp: Client | null;
+  roomList: Room[];
+  yachtList: Room[];
+  connectStatus: boolean;
+  chatlist: Chat[];
+  currentRoom: Room | null;
+  currentYacht: Room | null;
+  randomName: string;
+  userInfo: UserInfo[];
+  yachtScore: any[];
+  yachtState: boolean
 }
 
 function state(): ExampleStateInterface {
@@ -42,7 +44,9 @@ function state(): ExampleStateInterface {
     currentRoom: null,
     currentYacht: null,
     randomName: '',
-    userInfo: []
+    userInfo: [],
+    yachtScore: [],
+    yachtState: false
   }
 };
 

@@ -18,6 +18,7 @@ let RoomListSub: Subscription;
 let RoomSub: Subscription;
 let UserInfoSub: Subscription;
 let YachtListSub: Subscription;
+let YachtSub: Subscription;
 
 const actions: ActionTree<ExampleStateInterface, StateInterface> = {
   connect(context) {
@@ -81,7 +82,6 @@ const actions: ActionTree<ExampleStateInterface, StateInterface> = {
       })
 
       RoomSub = stomp?.subscribe(`/sub/chatting/chatroom/${roomId}`, res => {
-        console.log(JSON.parse(res.body));
         context.commit('pushChatListState', JSON.parse(res.body));
         Loading.hide();
         resolve();
@@ -136,7 +136,17 @@ const actions: ActionTree<ExampleStateInterface, StateInterface> = {
     } else {
       return true;
     }
-  }
+  },
+
+  SubscribeYacht(context, item: Room) {
+    return new Promise<void>((resolve, reject) => {
+      YachtSub = stomp?.subscribe(`/sub/yahtzee/score/${item.chatRoomId}`, res => {
+        console.log(JSON.parse(res.body));
+        context.commit('updateYachtScore', JSON.parse(res.body));
+        resolve();
+      });
+    })
+  },
 };
 
 export default actions;

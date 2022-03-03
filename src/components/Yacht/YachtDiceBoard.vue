@@ -12,9 +12,10 @@
         </template>
       </q-card-section>
     </q-card>
-    <div class="text-center q-mt-sm">
+    <div class="text-center q-mt-sm q-gutter-x-lg">
+      <q-btn label="게임 시작" color="primary" @click="startGame()" :disable="gameState" />
       <q-btn label="굴리기" color="primary" @click="rollDice()" :disable="times === 3" />
-      <span class="q-ml-md fs-125 text-weight-bold text-vertical-bottom">
+      <span class="fs-125 text-weight-bold text-vertical-bottom">
         {{ times }} / 3
       </span>
     </div>
@@ -25,6 +26,7 @@
 import { defineComponent } from 'vue'
 import YachtDice from './YachtDice'
 import delay from 'src/assets/common/funcitons/DelayTime'
+import axios from 'axios';
 
 export default defineComponent({
   components: {
@@ -63,6 +65,11 @@ export default defineComponent({
       times: 0
     };
   },
+  computed: {
+    gameState: function () {
+      return this.$store.getters['StompModule/isYatchStarted']
+    }
+  },
   methods: {
     async rollDice() {
       this.$data.times += 1;
@@ -100,6 +107,10 @@ export default defineComponent({
     getRandomFace() {
       const random = window.crypto?.getRandomValues(new Uint32Array(1))[0]/4294967296;
       return Math.floor(random * 6 + 1);
+    },
+
+    startGame() {
+      axios.put(`/room/${this.$route.params.roomId}/start`)
     }
   }
 })

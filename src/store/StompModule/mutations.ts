@@ -53,6 +53,14 @@ const mutation: MutationTree<ExampleStateInterface> = {
   resetUserInfo(state) {
     state.userInfo = [];
   },
+
+  updateYachtScore(state, score) {
+    state.yachtScore = score;
+  },
+
+  updateYachtState(state, value) {
+    state.yachtState = value;
+  }
 };
 
 export default mutation;

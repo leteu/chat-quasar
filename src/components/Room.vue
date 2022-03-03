@@ -61,7 +61,7 @@
 
     <div class="row">
       <div class="relative-position col">
-        <q-input
+        <IMEInput
           outlined
           v-model="message"
           dense
@@ -91,8 +91,12 @@ import { QInput } from 'quasar';
 import getters from 'src/store/StompModule/getters';
 import { Chat, UserInfo } from 'src/store/StompModule/state';
 import { defineComponent } from 'vue'
+import IMEInput from './IME/IMEInput';
 
 export default defineComponent({
+  components: {
+    IMEInput
+  },
   data() {
     return {
       message: '',

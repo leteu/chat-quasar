@@ -33,6 +33,10 @@ const getters: GetterTree<ExampleStateInterface, StateInterface> = {
 
   getUserInfo (context) {
     return context.userInfo
+  },
+
+  isYatchStarted(context) {
+    return context.yachtState;
   }
 };
 

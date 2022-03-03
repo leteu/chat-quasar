@@ -1,7 +1,10 @@
 <template>
-  <div id="container-yacht">
-    <div class="height-full full-width flex items-center justify-center">
-      <Yacht />
+  <div id="container-yacht-game">
+    <div class="height-full full-width row items-center justify-center">
+      <Yacht class="col" />
+      <div class="col-4 full-height">
+        <RoomVue />
+      </div>
     </div>
   </div>
 </template>
@@ -9,11 +12,38 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Yacht from 'src/components/Yacht';
+import RoomVue from 'src/components/Room.vue';
 
 export default defineComponent({
   components: {
-    Yacht
+    Yacht,
+    RoomVue
   },
+  async created() {
+    if(this.$store.getters['StompModule/getConnectStatus']) {
+      this.$store.dispatch('StompModule/SubscribeUserInfo', this.$route.params.roomId)
+      this.$store.dispatch('StompModule/SubscribeRoom', this.$route.params.roomId)
+        .then(() => {
+          this.$store.dispatch('StompModule/SubscribeYacht', this.$route.params.roomId)
+        })
+    } else {
+      const connectServer = async () => {
+      await this.$store.dispatch('StompModule/connect')
+        .then(() => {
+          this.$store.dispatch('StompModule/SubscribeUserInfo', this.$route.params.roomId)
+          this.$store.dispatch('StompModule/SubscribeRoom', this.$route.params.roomId)
+            .then(() => {
+              this.$store.dispatch('StompModule/SubscribeYacht', this.$route.params.roomId)
+            })
+        })
+        .catch(() => {
+          connectServer();
+        })
+      };
+
+      connectServer();
+    }
+  }
 })
 </script>
 
