@@ -4,7 +4,7 @@
     <q-header elevated class="bg-primary text-white">
       <q-toolbar>
         <q-toolbar-title>
-          익명 채팅
+          등대 노동자들
         </q-toolbar-title>
 
         <q-btn
