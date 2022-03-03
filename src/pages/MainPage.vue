@@ -11,7 +11,7 @@
           @click="onClickCreateRoom()"
         />
     </div>
-    <RoomList class="col" @update:room="item => updateRoom(item)" @remove:room="item => removeRoom(item)" />
+    <RoomList class="col" @update:room="item => updateRoom(item)" @remove:room="item => removeRoom(item)" roomType="GENERAL" />
   </div>
 </template>
 
@@ -48,14 +48,14 @@ export default defineComponent({
         .then((value) => {
           if(value) {
             this.$store.dispatch('StompModule/UnSubscribeRoomList');
-            this.$router.push(`/room/${item.id}`);
+            this.$router.push(`/room/${item.chatRoomId}`);
             this.$store.commit('StompModule/setCurrenRoomState', item);
           }
         })
     },
 
     removeRoom(item: Room) {
-      axios.delete(`${item.id}/room`)
+      axios.delete(`${item.chatRoomId}/room`)
         .then(() => {
           this.$q.notify({
             message: '삭제되었습니다.',
