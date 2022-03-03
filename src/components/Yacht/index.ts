@@ -2,7 +2,7 @@ import { defineComponent, h, Ref, ref } from 'vue';
 import YachtDiceBoard from './YachtDiceBoard.vue';
 import YachtScoreBoard from './YachtScoreBoard.vue';
 
-interface DiceObj {
+export interface DiceObj {
   first: number;
   second: number;
   third: number;

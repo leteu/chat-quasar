@@ -23,15 +23,23 @@
             <q-card-section class="q-pa-none q-py-sm q-py-sm">
               {{ user.userName }}
             </q-card-section>
-            <template v-for="(item, idx) in user.scoreBoard" :key="`user-${item.id}-${idx}`">
+            <template v-if="user.scoreBoard.length">
+              <template v-for="(item, idx) in user.scoreBoard" :key="`user-${item.id}-${idx}`">
+                <q-separator />
+                <q-card-section
+                  class="q-pa-none q-py-sm col min-height-37px"
+                  :class="item.score ? 'bg-green-5' : ''"
+                  @click="() => !['합계', '보너스'].includes(item.label) ? getScore(user, item.label) : {}"
+                >
+                  {{item.score||hint[item.label]||''}}
+                </q-card-section>
+              </template>
+            </template>
+            <template v-else>
               <q-separator />
-              <q-card-section
-                class="q-pa-none q-py-sm col min-height-37px"
-                :class="item.score ? 'bg-green-5' : ''"
-                @click="() => !['합계', '보너스'].includes(item.label) ? getScore(user, item.label) : {}"
-              >
-                {{item.score||''}}
-              </q-card-section>
+              <div class="full-height full-width flex items-center justify-center">
+                대기중
+              </div>
             </template>
           </q-card>
         </q-card-section>
@@ -41,7 +49,10 @@
 </template>
 
 <script lang="ts">
+import axios from 'axios';
+import { UserInfo } from 'src/store/StompModule/state';
 import { defineComponent } from 'vue'
+import { DiceObj } from '.';
 
 const rules = [
   {
@@ -123,12 +134,31 @@ export default defineComponent({
   data() {
     return {
       rules,
-      users: [
-        {
-          userName: '나',
-          scoreBoard: newScoreBoard
+      hint: {
+        aces: 0,
+        chance: 0,
+        fives: 0,
+        fourOfKind: 0,
+        fours: 0,
+        fullHouse: 0,
+        largeStraight: 0,
+        sixes: 0,
+        smallStraight: 0,
+        threeOfKind: 0,
+        threes: 0,
+        twos: 0,
+        yahtzee: 0,
+      }
+    }
+  },
+  computed: {
+    users: function() {
+      return (this.$store.getters['StompModule/getUserInfo'] as UserInfo[]).map(item => {
+        return {
+          userName: item.userName,
+          scoreBoard: []
         }
-      ]
+      });
     }
   },
   methods: {
@@ -136,13 +166,20 @@ export default defineComponent({
       // this.$emit('get:score', { user, item });
 
       console.log(user, item)
+    },
+
+    sendDice(value: DiceObj) {
+      axios.post('/expected/score', { dices: Object.values(value)})
+        .then(({data}) => {
+          this.hint = data;
+        })
     }
   },
   watch: {
     currentDice: {
       deep: true,
       handler(newVal, oldVal) {
-        console.log(newVal)
+        this.sendDice(newVal);
       }
     }
   }

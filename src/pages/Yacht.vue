@@ -43,6 +43,9 @@ export default defineComponent({
 
       connectServer();
     }
+  },
+  beforeUnmount() {
+    this.$store.dispatch('StompModule/disconnect')
   }
 })
 </script>

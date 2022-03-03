@@ -12,7 +12,7 @@ import JwtService from 'src/assets/common/jwt.service';
 
 const socket = new SockJS(API_URL+'socket');
 const stomp = Stomp.over(socket) as Client;
-stomp.debug = () => {};
+// stomp.debug = () => {};
 
 let RoomListSub: Subscription;
 let RoomSub: Subscription;
@@ -35,18 +35,23 @@ const actions: ActionTree<ExampleStateInterface, StateInterface> = {
           // 소켓 연결 성공
           context.commit('setStomp', stomp);
           context.commit('setConnectStatus', true);
-          loadingDialog.hide();
+          loadingDialog?.hide();
           resolve();
         },
         error => {
           // 소켓 연결 실패
           context.commit('setStomp', null);
           context.commit('setConnectStatus', false);
-          loadingDialog.hide();
+          loadingDialog?.hide();
           reject();
         }
       );
     });
+  },
+
+  disconnect(context) {
+    stomp?.disconnect();
+    context.state.stomp = null;
   },
 
   SubscribeRoomList(context) {
@@ -138,9 +143,9 @@ const actions: ActionTree<ExampleStateInterface, StateInterface> = {
     }
   },
 
-  SubscribeYacht(context, item: Room) {
+  SubscribeYacht(context, chatRoomId: number) {
     return new Promise<void>((resolve, reject) => {
-      YachtSub = stomp?.subscribe(`/sub/yahtzee/score/${item.chatRoomId}`, res => {
+      YachtSub = stomp?.subscribe(`/sub/yahtzee/score/${chatRoomId}`, res => {
         console.log(JSON.parse(res.body));
         context.commit('updateYachtScore', JSON.parse(res.body));
         resolve();

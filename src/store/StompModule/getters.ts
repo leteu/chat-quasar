@@ -16,7 +16,7 @@ const getters: GetterTree<ExampleStateInterface, StateInterface> = {
   },
 
   getConnectStatus (context) {
-    return context.connectStatus;
+    return context.stomp?.connected;
   },
 
   getChatList (context) {
