@@ -9,8 +9,8 @@ export interface Room {
 
 export interface Chat {
   userName: string,
-  content: string,
-  type?: string,
+  messageContent: string,
+  authority?: string,
   date: string
 }
 

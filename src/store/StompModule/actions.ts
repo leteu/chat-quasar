@@ -1,13 +1,14 @@
 import { Loading, QSpinnerHourglass, Dialog } from 'quasar';
 import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
-import { ExampleStateInterface } from './state';
+import { ExampleStateInterface, Room } from './state';
 
 import Stomp, { Client, Subscription } from 'webstomp-client';
 import SockJS from 'sockjs-client';
 import API_URL from 'src/assets/common/config';
 import SocketLoadingDialog from 'src/components/SocketLoadingDialog.vue';
 import axios from 'axios';
+import JwtService from 'src/assets/common/jwt.service';
 
 const socket = new SockJS(API_URL+'socket');
 const stomp = Stomp.over(socket) as Client;
@@ -26,7 +27,9 @@ const actions: ActionTree<ExampleStateInterface, StateInterface> = {
       })
 
       stomp?.connect(
-        {},
+        {
+          'x-auth-token': JwtService?.getToken()||''
+        },
         frame => {
           // 소켓 연결 성공
           context.commit('setStomp', stomp);
@@ -57,7 +60,6 @@ const actions: ActionTree<ExampleStateInterface, StateInterface> = {
   SubscribeYachtList(context) {
     return new Promise<void>((resolve, reject) => {
       YachtListSub = stomp?.subscribe("/sub/chatroom/list/YAHTZEE", res => {
-        console.log(JSON.parse(res.body));
         context.commit('setYachtListState', JSON.parse(res.body));
         resolve();
       })
@@ -78,25 +80,19 @@ const actions: ActionTree<ExampleStateInterface, StateInterface> = {
         spinner: QSpinnerHourglass
       })
 
-      RoomSub = stomp?.subscribe(`/sub/chat/room/${roomId}`, res => {
+      RoomSub = stomp?.subscribe(`/sub/chatting/chatroom/${roomId}`, res => {
+        console.log(JSON.parse(res.body));
         context.commit('pushChatListState', JSON.parse(res.body));
         Loading.hide();
         resolve();
       });
 
       context.commit('setRandomName');
-
-      axios.post('/chat/room/in', {
-        roomId,
-        userName: context.getters.getRandomName,
-        userId: RoomSub.id
-      })
     })
   },
 
   SubscribeUserInfo(context, roomId) {
-    UserInfoSub = stomp?.subscribe(`/sub/chat/user/room/${roomId}`, res => {
-      console.log(JSON.parse(res.body));
+    UserInfoSub = stomp?.subscribe(`/sub/user/chatroom/${roomId}`, res => {
       context.commit('setUserInfo', JSON.parse(res.body));
     })
   },
@@ -111,22 +107,21 @@ const actions: ActionTree<ExampleStateInterface, StateInterface> = {
     context.commit('resetUserInfo');
   },
 
-  sendMsgRoom(context, { message, roomId }) {
+  sendMsgRoom(context, { message, chatRoomId }) {
     if (stomp && stomp.connected) {
       const msg = { 
-        userName: context.state.randomName,
-        content: message,
-        roomId
+        messageContent: message,
+        chatRoomId
       };
-      stomp.send("/pub/chat/room", JSON.stringify(msg), {});
+      stomp.send("/pub/message/chatroom", JSON.stringify(msg), {});
     }
   },
 
-  chkRoomPassword(context, item: { id: number, private: boolean }): boolean | Promise<boolean> {
+  chkRoomPassword(context, item: Room): boolean | Promise<boolean> {
     if(item.private) {
       const passwordInput = prompt('비밀번호를 입력해주세요.');
       if(passwordInput) {
-        return axios.post('verification/room', { roomId: item.id, password: passwordInput })
+        return axios.post('/secret/chatroom/verification', { chatRoomId: item.chatRoomId, password: passwordInput })
           .then(({data}) => {
             if(data) {
               return true;

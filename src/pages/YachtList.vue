@@ -58,7 +58,7 @@ export default defineComponent({
         .then((value) => {
           if(value) {
             this.$store.dispatch('StompModule/UnSubscribeYatchList');
-            this.$router.push(`/yacht/${item.chatRoomId}`);
+            this.$router.push(`/game/yacht/${item.chatRoomId}`);
             this.$store.commit('StompModule/setCurrenYachtState', item);
           }
         })

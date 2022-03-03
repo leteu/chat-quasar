@@ -42,7 +42,7 @@ const mutation: MutationTree<ExampleStateInterface> = {
     state.currentRoom = value
   },
 
-  setCurrenYatchState(state, value) {
+  setCurrenYachtState(state, value) {
     state.currentYacht = value
   },
 
