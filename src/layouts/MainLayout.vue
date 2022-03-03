@@ -129,7 +129,7 @@ export default defineComponent({
   > .q-layout
     > .q-page-container
       > div
-        max-height: calc(100vh - 50px)
-        height: calc(100vh - 50px)
+        max-height: calc(100vh - 86px)
+        height: calc(100vh - 86px)
         overflow-y: auto
 </style>
