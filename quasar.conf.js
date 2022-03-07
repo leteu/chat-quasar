@@ -66,6 +66,9 @@ module.exports = configure(function (ctx) {
 
       // Options below are automatically set depending on the env, set them if you want to override
       // extractCSS: false,
+      env: {
+        KAKAO_KEY: '33f220befa9128ab459f5bb3db3022de'
+      },
 
       // https://quasar.dev/quasar-cli/handling-webpack
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
