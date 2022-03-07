@@ -21,20 +21,12 @@ export default defineComponent({
   },
   async created() {
     if(this.$store.getters['StompModule/getConnectStatus']) {
-      this.$store.dispatch('StompModule/SubscribeUserInfo', this.$route.params.roomId)
-      this.$store.dispatch('StompModule/SubscribeRoom', this.$route.params.roomId)
-        .then(() => {
-          this.$store.dispatch('StompModule/SubscribeYacht', this.$route.params.roomId)
-        })
+      this.$store.dispatch('StompModule/SubscribeYacht', this.$route.params.roomId)
     } else {
       const connectServer = async () => {
         await this.$store.dispatch('StompModule/connect')
           .then(() => {
-            this.$store.dispatch('StompModule/SubscribeUserInfo', this.$route.params.roomId)
-            this.$store.dispatch('StompModule/SubscribeRoom', this.$route.params.roomId)
-              .then(() => {
-                this.$store.dispatch('StompModule/SubscribeYacht', this.$route.params.roomId)
-              })
+            this.$store.dispatch('StompModule/SubscribeYacht', this.$route.params.roomId)
           })
           .catch(() => {
             connectServer();
