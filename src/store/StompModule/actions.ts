@@ -51,7 +51,7 @@ const actions: ActionTree<StompModuleStateInterface, StateInterface> = {
 
   disconnect(context) {
     stomp?.disconnect();
-    context.state.stomp = null;
+    context.commit('setStomp', null);
   },
 
   SubscribeRoomList(context) {
