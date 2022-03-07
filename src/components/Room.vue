@@ -61,24 +61,26 @@
 
     <div class="row">
       <div class="relative-position col">
-        <IMEInput
-          outlined
-          v-model="message"
-          dense
-          square
-          type="textarea"
-          @keydown.enter="e => {
-            if(!e.shiftKey) {
-              e.preventDefault();
-              onClickSend();
-            }
-          }"
-          row="2"
-          :rules="[val => !!val && !!val.trim() || '']"
-          class="hideErrorMessageSlot"
-          hide-bottom-space
-          ref="messageInput"
-        />
+        <q-form ref="messageForm">
+          <IMEInput
+            outlined
+            v-model="message"
+            dense
+            square
+            type="textarea"
+            @keydown.enter="e => {
+              if(!e.shiftKey) {
+                e.preventDefault();
+                onClickSend();
+              }
+            }"
+            row="2"
+            :rules="[val => !!val && !!val.trim() || '']"
+            class="hideErrorMessageSlot"
+            hide-bottom-space
+            ref="messageInput"
+          />
+        </q-form>
       </div>
       <q-btn dense @click="onClickSend" label="전송" color="primary" />
     </div>
@@ -87,7 +89,7 @@
 
 <script lang="ts">
 import axios from 'axios';
-import { QInput } from 'quasar';
+import { QField, QForm, QInput } from 'quasar';
 import getters from 'src/store/StompModule/getters';
 import { Chat, UserInfo } from 'src/store/StompModule/state';
 import { defineComponent } from 'vue'
@@ -133,15 +135,17 @@ export default defineComponent({
   },
   methods: {
     onClickSend() {
-      if((this.$refs.messageInput as QInput).validate()) {
-        this.$store.dispatch('StompModule/sendMsgRoom',
-          {
-            message: this.$data.message,
-            chatRoomId: this.$route.params.roomId
-          }
-        );
-        this.$data.message = '';
-      }
+      (this.$refs.messageForm as QForm).validate().then((chk: boolean) => {
+        if(chk) {
+          this.$store.dispatch('StompModule/sendMsgRoom',
+            {
+              message: this.$data.message,
+              chatRoomId: this.$route.params.roomId
+            }
+          );
+          this.$data.message = '';
+        }
+      })
     },
     leave(event: any) {
       this.$store.dispatch('StompModule/UnSubscribeRoom');

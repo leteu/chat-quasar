@@ -51,7 +51,7 @@ export default defineComponent({
       type: String
     }
   },
-  emits: ['update:modelValue', 'clear'],
+  emits: ['update:modelValue', 'clear', 'keydown'],
   setup(props, { emit, slots }) {
     const $q = useQuasar();
     const inputText = ref(props.modelValue);
@@ -133,7 +133,7 @@ export default defineComponent({
         ref: QFieldRef,
         ...props,
         noErrorIcon: true,
-        clearable: false
+        clearable: false,
       },
       {
         control: () => h(props.type === 'textarea' ? 'textarea' : 'input',
@@ -149,7 +149,8 @@ export default defineComponent({
             disabled: props.disable,
             tabindex: props.tabindex,
             ref: inputRef,
-            onBlur: () => { QFieldRef.value?.validate() }
+            onBlur: () => { QFieldRef.value?.validate() },
+            onKeydown: (evt:KeyboardEvent) => emit('keydown', evt)
           }
         ),
         ...childrenSlots
