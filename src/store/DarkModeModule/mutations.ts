@@ -1,7 +1,7 @@
 import { MutationTree } from 'vuex';
-import { ExampleStateInterface } from './state';
+import { DarkModeModuleStateInterface } from './state';
 
-const mutation: MutationTree<ExampleStateInterface> = {
+const mutation: MutationTree<DarkModeModuleStateInterface> = {
   setDarkMode(state) {
     state.darkMode = !state.darkMode;
   }

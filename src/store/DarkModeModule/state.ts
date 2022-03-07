@@ -1,8 +1,8 @@
-export interface ExampleStateInterface {
+export interface DarkModeModuleStateInterface {
   darkMode: boolean
 }
 
-function state(): ExampleStateInterface {
+function state(): DarkModeModuleStateInterface {
   return {
     darkMode: false
   }

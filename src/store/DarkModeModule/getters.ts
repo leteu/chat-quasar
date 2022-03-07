@@ -1,8 +1,8 @@
 import { GetterTree } from 'vuex';
 import { StateInterface } from '../index';
-import { ExampleStateInterface } from './state';
+import { DarkModeModuleStateInterface } from './state';
 
-const getters: GetterTree<ExampleStateInterface, StateInterface> = {
+const getters: GetterTree<DarkModeModuleStateInterface, StateInterface> = {
   isDarkMode (state) {
     return state.darkMode;
   }
