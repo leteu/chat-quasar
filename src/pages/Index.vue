@@ -23,6 +23,8 @@ export default defineComponent({
 
     if(!this.$store.getters['StompModule/getConnectStatus']) {
       connectServer();
+    } else {
+      this.$store.dispatch('StompModule/SubscribeRoomList')
     }
   },
   beforeUnmount() {
