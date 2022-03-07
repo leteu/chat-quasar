@@ -1,5 +1,6 @@
 import { RouteRecordRaw } from 'vue-router';
 import SignIn from 'src/pages/Auth/SignIn.vue';
+import SignUp from 'src/pages/Auth/SignUp.vue';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -8,6 +9,7 @@ const routes: RouteRecordRaw[] = [
     meta: { chkIsLogin: true },
     children: [
       { path: "login", component: SignIn, name: "SignIn" },
+      { path: "signup", component: SignUp, name: "SignUp" },
     ]
   },
 

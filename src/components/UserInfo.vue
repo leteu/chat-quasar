@@ -55,7 +55,7 @@ export default defineComponent({
             icon: 'done_all',
             color: 'primary'
           })
-          this.$router.push({name: 'Login'});
+          this.$router.push({name: 'SignIn'});
         })
     },
 
