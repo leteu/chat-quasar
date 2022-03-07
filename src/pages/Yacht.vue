@@ -28,17 +28,17 @@ export default defineComponent({
         })
     } else {
       const connectServer = async () => {
-      await this.$store.dispatch('StompModule/connect')
-        .then(() => {
-          this.$store.dispatch('StompModule/SubscribeUserInfo', this.$route.params.roomId)
-          this.$store.dispatch('StompModule/SubscribeRoom', this.$route.params.roomId)
-            .then(() => {
-              this.$store.dispatch('StompModule/SubscribeYacht', this.$route.params.roomId)
-            })
-        })
-        .catch(() => {
-          connectServer();
-        })
+        await this.$store.dispatch('StompModule/connect')
+          .then(() => {
+            this.$store.dispatch('StompModule/SubscribeUserInfo', this.$route.params.roomId)
+            this.$store.dispatch('StompModule/SubscribeRoom', this.$route.params.roomId)
+              .then(() => {
+                this.$store.dispatch('StompModule/SubscribeYacht', this.$route.params.roomId)
+              })
+          })
+          .catch(() => {
+            connectServer();
+          })
       };
 
       connectServer();

@@ -45,7 +45,9 @@ export default defineComponent({
         })
     };
 
-    connectServer();
+    if(!this.$store.getters['StompModule/getConnectStatus']) {
+      connectServer();
+    }
   },
   computed: {
     dataList: function () {
