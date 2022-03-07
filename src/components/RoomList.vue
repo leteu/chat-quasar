@@ -13,6 +13,7 @@
                 :color="roomType === 'GENERAL'
                           ? $q.dark.isActive ? 'grey-9' : 'grey-4'
                           : ''"
+                v-if="roomType === 'YACHT'"
               />
             </span>
 
