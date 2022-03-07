@@ -1,10 +1,10 @@
 import { GetterTree } from 'vuex';
 import { StateInterface } from '../index';
-import { ExampleStateInterface } from './state';
+import { AuthModuleStateInterface } from './state';
 import moment from 'moment';
 import decodeToken from 'src/assets/common/funcitons/DecodeToken';
 
-const getters: GetterTree<ExampleStateInterface, StateInterface> = {
+const getters: GetterTree<AuthModuleStateInterface, StateInterface> = {
   isLogin(state): boolean {
     return !!state.userToken;
   },

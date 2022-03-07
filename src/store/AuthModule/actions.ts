@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
-import { ExampleStateInterface } from './state';
+import { AuthModuleStateInterface } from './state';
 
-const actions: ActionTree<ExampleStateInterface, StateInterface> = {
+const actions: ActionTree<AuthModuleStateInterface, StateInterface> = {
   login(context, credentials) {
     return new Promise(resolve => {
       axios.post('v1/login', credentials)

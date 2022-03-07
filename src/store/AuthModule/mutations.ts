@@ -1,9 +1,9 @@
 import { MutationTree } from 'vuex';
-import { ExampleStateInterface } from './state';
+import { AuthModuleStateInterface } from './state';
 import JwtService from 'src/assets/common/jwt.service';
 import axios from 'axios';
 
-const mutation: MutationTree<ExampleStateInterface> = {
+const mutation: MutationTree<AuthModuleStateInterface> = {
   setToken(state, value) {
     if(!value) {
       JwtService.destroyToken();
