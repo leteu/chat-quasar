@@ -18,7 +18,7 @@ export interface UserInfo {
   userName: string
 }
 
-export interface ExampleStateInterface {
+export interface StompModuleStateInterface {
   prop: boolean;
   stomp: Client | null;
   roomList: Room[];
@@ -33,7 +33,7 @@ export interface ExampleStateInterface {
   yachtState: boolean
 }
 
-function state(): ExampleStateInterface {
+function state(): StompModuleStateInterface {
   return {
     prop: false,
     stomp: null,

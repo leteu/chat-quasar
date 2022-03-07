@@ -1,7 +1,7 @@
 import { Loading, QSpinnerHourglass, Dialog } from 'quasar';
 import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
-import { ExampleStateInterface, Room } from './state';
+import { StompModuleStateInterface, Room } from './state';
 
 import Stomp, { Client, Subscription } from 'webstomp-client';
 import SockJS from 'sockjs-client';
@@ -20,7 +20,7 @@ let UserInfoSub: Subscription;
 let YachtListSub: Subscription;
 let YachtSub: Subscription;
 
-const actions: ActionTree<ExampleStateInterface, StateInterface> = {
+const actions: ActionTree<StompModuleStateInterface, StateInterface> = {
   connect(context) {
     return new Promise<void>((resolve, reject) => {
       const loadingDialog = Dialog.create({
