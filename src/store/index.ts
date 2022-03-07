@@ -3,11 +3,15 @@ import { InjectionKey } from 'vue'
 import {
   createStore,
   Store as VuexStore,
+  StoreOptions,
   useStore as vuexUseStore,
 } from 'vuex'
 import AuthModule from './AuthModule'
 import DarkModeModule from './DarkModeModule'
 import StompModule from './StompModule'
+import { StompModuleStateInterface } from './StompModule/state'
+import { DarkModeModuleStateInterface } from './DarkModeModule/state'
+import { AuthModuleStateInterface } from './AuthModule/state'
 
 // import example from './module-example'
 // import { ExampleStateInterface } from './module-example/state';
@@ -25,7 +29,9 @@ export interface StateInterface {
   // Define your own store structure, using submodules if needed
   // example: ExampleStateInterface;
   // Declared as unknown to avoid linting issue. Best to strongly type as per the line above.
-  StompModule: unknown
+  StompModule: StoreOptions<StompModuleStateInterface>;
+  DarkModeModule: StoreOptions<DarkModeModuleStateInterface>;
+  AuthModule: StoreOptions<AuthModuleStateInterface>;
 }
 
 // provide typings for `this.$store`
