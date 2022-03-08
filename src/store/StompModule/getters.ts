@@ -35,8 +35,12 @@ const getters: GetterTree<StompModuleStateInterface, StateInterface> = {
     return context.userInfo
   },
 
-  isYatchStarted(context) {
+  isYachtStarted(context) {
     return context.yachtState;
+  },
+
+  getYachtScoreBoard(context) {
+    return context.yachtScore;
   }
 };
 
