@@ -15,7 +15,7 @@ let stomp: Client;
 let RoomListSub: Subscription;
 let RoomSub: Subscription;
 let UserInfoSub: Subscription;
-let YachtListSub: Subscription;
+export let YachtListSub: Subscription;
 let YachtSub: Subscription;
 
 const actions: ActionTree<StompModuleStateInterface, StateInterface> = {
@@ -153,7 +153,6 @@ const actions: ActionTree<StompModuleStateInterface, StateInterface> = {
   SubscribeYacht(context, chatRoomId: number) {
     return new Promise<void>((resolve, reject) => {
       YachtSub = stomp?.subscribe(`/sub/yahtzee/score/${chatRoomId}`, res => {
-        console.log(JSON.parse(res.body));
         context.commit('updateYachtScore', JSON.parse(res.body));
         resolve();
       });
@@ -164,6 +163,16 @@ const actions: ActionTree<StompModuleStateInterface, StateInterface> = {
     YachtSub?.unsubscribe();
     context.commit('updateYachtScore', []);
   },
+
+  setterYachtState(context, value: boolean) {
+    context.commit('updateYachtState', value);
+  },
+
+  sendYachtGetScore(context, requestObj){
+    if (stomp && stomp.connected) {
+      stomp.send("/pub/update/score/yahtzee", JSON.stringify(requestObj), {});
+    }
+  }
 };
 
 export default actions;

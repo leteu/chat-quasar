@@ -1,6 +1,7 @@
+import { useRoute } from 'vue-router';
 import { GetterTree } from 'vuex';
 import { StateInterface } from '../index';
-import { StompModuleStateInterface } from './state';
+import { Room, StompModuleStateInterface } from './state';
 
 const getters: GetterTree<StompModuleStateInterface, StateInterface> = {
   getRoomListData (context) {
@@ -36,7 +37,8 @@ const getters: GetterTree<StompModuleStateInterface, StateInterface> = {
   },
 
   isYachtStarted(context) {
-    return context.yachtState;
+    const $route = useRoute();
+    return (context.yachtList.find(item => item.chatRoomId === Number($route.params.roomId)) as Room)?.status === '진행중';
   },
 
   getYachtScoreBoard(context) {

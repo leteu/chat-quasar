@@ -4,7 +4,8 @@ export interface Room {
   chatRoomId : number
   chatRoomName : string,
   private: boolean,
-  type: 'GENERAL' | 'YAHTZEE'
+  type: 'GENERAL' | 'YAHTZEE',
+  status: '진행중' | '일반'
 }
 
 export interface Chat {
