@@ -10,7 +10,7 @@
             <span>
               <q-icon
                 name="casino"
-                :color="roomType === 'GENERAL'
+                :color="item.status === '일반'
                           ? $q.dark.isActive ? 'grey-9' : 'grey-4'
                           : ''"
                 v-if="roomType === 'YACHT'"
