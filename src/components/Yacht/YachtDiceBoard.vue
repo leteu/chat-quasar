@@ -14,7 +14,7 @@
     </q-card>
     <div class="text-center q-mt-sm q-gutter-x-lg">
       <q-btn label="게임 시작" color="primary" @click="startGame()" :disable="gameState" />
-      <q-btn label="굴리기" color="primary" @click="rollDice()" :disable="times === 3 || !gameState" />
+      <q-btn label="굴리기" color="primary" @click="rollDice()" :disable="(times === 3 || !gameState) && myTurn" />
       <span class="fs-125 text-weight-bold text-vertical-bottom">
         {{ times }} / 3
       </span>
@@ -69,6 +69,10 @@ export default defineComponent({
   computed: {
     gameState: function () {
       return this.$store.getters['StompModule/isYachtStarted'];
+    },
+    myTurn: function () {
+      this.times = 0;
+      return this.$store.getters['StompModule/getYachtScoreBoard']?.turnUserId === this.decodeToken().id
     }
   },
   created() {

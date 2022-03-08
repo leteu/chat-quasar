@@ -36,14 +36,14 @@
                   >
                     <template v-if="decodeToken().id === user.id">
                       <span
-                        :class="!item.score && !!hint[item.label] ? 'text-grey-5' : ''"
+                        :class="!item.score && !!hint[item.value] ? 'text-grey-5' : ''"
                         class="text-weight-bold"
                       >
-                        {{item.score||hint[item.label]||''}}
+                        {{item.score !== null ? item.score : hint[item.value]||''}}
                       </span>
                     </template>
                     <template v-else>
-                      {{item.score||''}}
+                      {{item.score !== null ? item.score : ''}}
                     </template>
                   </q-card-section>
                 </template>
@@ -74,6 +74,7 @@
 
 <script lang="ts">
 import axios from 'axios';
+import { Nullable } from 'src/assets/common/type/Nullable';
 import { UserInfo } from 'src/store/StompModule/state';
 import { defineComponent } from 'vue'
 import { DiceObj } from '.';
@@ -137,20 +138,20 @@ const rules = [
 ];
 
 const newScoreBoard = [
-  { label: 'ones',      value: 'ones',          score: 0 },
-  { label: 'twos',      value: 'twos',          score: 0 },
-  { label: 'threes',    value: 'threes',        score: 0 },
-  { label: 'fours',     value: 'fours',         score: 0 },
-  { label: 'fives',     value: 'fives',         score: 0 },
-  { label: 'sixes',     value: 'sixes',         score: 0 },
-  { label: 'bonus',     value: 'bonus',         score: 0 },
-  { label: 'choice',    value: 'chance',        score: 0 },
-  { label: 'fullHouse', value: 'fullHouse',     score: 0 },
-  { label: 'fourOf',    value: 'fourOfKind',    score: 0 },
-  { label: 'lgSt',      value: 'largeStraight', score: 0 },
-  { label: 'smSt',      value: 'smallStraight', score: 0 },
-  { label: 'yacht',     value: 'yahtzee',       score: 0 },
-  { label: '합계',      value: 'totalScore',    score: 0 },
+  { label: 'ones',      value: 'ones',          score: null as Nullable<number> },
+  { label: 'twos',      value: 'twos',          score: null as Nullable<number> },
+  { label: 'threes',    value: 'threes',        score: null as Nullable<number> },
+  { label: 'fours',     value: 'fours',         score: null as Nullable<number> },
+  { label: 'fives',     value: 'fives',         score: null as Nullable<number> },
+  { label: 'sixes',     value: 'sixes',         score: null as Nullable<number> },
+  { label: 'bonus',     value: 'bonus',         score: null as Nullable<number> },
+  { label: 'choice',    value: 'chance',        score: null as Nullable<number> },
+  { label: 'fullHouse', value: 'fullHouse',     score: null as Nullable<number> },
+  { label: 'fourOf',    value: 'fourOfKind',    score: null as Nullable<number> },
+  { label: 'lgSt',      value: 'largeStraight', score: null as Nullable<number> },
+  { label: 'smSt',      value: 'smallStraight', score: null as Nullable<number> },
+  { label: 'yacht',     value: 'yahtzee',       score: null as Nullable<number> },
+  { label: '합계',      value: 'totalScore',    score: null as Nullable<number> },
 ];
 
 type ScoreType = 'ones'
@@ -162,9 +163,9 @@ type ScoreType = 'ones'
 | 'bonus'
 | 'chance'
 | 'fullHouse'
-| 'fourOf'
-| 'lgSt'
-| 'smSt'
+| 'fourOfKind'
+| 'largeStraight'
+| 'smallStraight'
 | 'yahtzee'
 | 'totalScore'
 
@@ -182,9 +183,9 @@ export default defineComponent({
         sixes: 0,
         chance: 0,
         fullHouse: 0,
-        fourOf: 0,
-        lgSt: 0,
-        smSt: 0,
+        fourOfKind: 0,
+        largeStraight: 0,
+        smallStraight: 0,
         yahtzee: 0,
       }
     }
@@ -196,7 +197,7 @@ export default defineComponent({
           id: item.userId,
           userName: item.userName,
           simpSessionId: item.simpSessionId,
-          myTurn: item.TurnUserId === this.decodeToken().id,
+          myTurn: this.$store.getters['StompModule/getYachtScoreBoard'].turnUserId === this.decodeToken().id,
           scoreBoard: newScoreBoard.map(board => {
             board.score = item[board.value]||0;
             return board;
