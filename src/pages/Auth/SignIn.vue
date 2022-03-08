@@ -72,7 +72,11 @@ export default defineComponent({
       showPasswordFlag: false,
     };
   },
-  created() {},
+  created() {
+    if(this.$store.getters['StompModule/getConnectStatus']) {
+      this.$store.dispatch('StompModule/disconnect');
+    }
+  },
   mounted() {
     if (window.Kakao) {
       this.KakaoInitKey();
