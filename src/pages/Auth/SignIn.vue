@@ -73,7 +73,7 @@ export default defineComponent({
     };
   },
   mounted() {
-    if (!!window?.Kakao) {
+    if (window.Kakao) {
       this.KakaoInitKey();
     } else {
       const script = document.createElement("script");
@@ -85,8 +85,9 @@ export default defineComponent({
   },
   methods: {
     KakaoInitKey() {
-      window.Kakao.init(process.env.KAKAO_KEY);
-      window.Kakao.Auth.getAccessToken()
+      if(!window.Kakao?.Auth?.getAccessToken()) {
+        window.Kakao.init(process.env.KAKAO_KEY);
+      }
     },
 
     loginWithKakao() {
