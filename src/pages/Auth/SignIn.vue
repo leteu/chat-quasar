@@ -72,13 +72,8 @@ export default defineComponent({
       showPasswordFlag: false,
     };
   },
-  created() {
-    if(this.$store.getters['StompModule/getConnectStatus']) {
-      this.$store.dispatch('StompModule/disconnect');
-    }
-  },
   mounted() {
-    if (window.Kakao) {
+    if (!!window?.Kakao) {
       this.KakaoInitKey();
     } else {
       const script = document.createElement("script");

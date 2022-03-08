@@ -5,30 +5,35 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, nextTick } from 'vue';
-import { useStore } from "vuex";
+import { defineComponent, ref, nextTick,  } from 'vue';
+import { useStore } from 'src/store';
 
 export default defineComponent({
   name: 'Index',
-  created() {
+  setup() {
+    const $store = useStore();
+
     const connectServer = async () => {
-      await this.$store.dispatch('StompModule/connect')
+      await $store.dispatch('StompModule/connect')
         .then(() => {
-          this.$store.dispatch('StompModule/SubscribeRoomList')
+          $store.dispatch('StompModule/SubscribeRoomList')
         })
         .catch(() => {
           connectServer();
         })
     };
 
-    if(!this.$store.getters['StompModule/getConnectStatus']) {
-      connectServer();
-    } else {
-      this.$store.dispatch('StompModule/SubscribeRoomList')
+    (() => {
+      if(!$store.getters['StompModule/getConnectStatus']) {
+        connectServer();
+      } else {
+        $store.dispatch('StompModule/SubscribeRoomList')
+      }
+    })();
+
+    return {
+
     }
-  },
-  beforeUnmount() {
-    this.$store.dispatch('StompModule/disconnect')
   }
 });
 </script>
