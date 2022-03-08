@@ -8,8 +8,6 @@ const actions: ActionTree<AuthModuleStateInterface, StateInterface> = {
     return new Promise(resolve => {
       axios.post('v1/login', credentials)
         .then(({data, status, statusText, headers, config, request}) => {
-          console.log(data);
-
           if (data.response.status === 401) {
             alert("인증이 실패했습니다.");
             return false;

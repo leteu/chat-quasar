@@ -123,19 +123,16 @@ export default defineComponent({
           password: this.password,
         })
         .then(({ data, context }) => {
-          console.log(data)
-          // if (data.response.status === 401 && context.token === null) {
-          //   alert("카카오 인증이 필요합니다.");
-          // } else if(data.response.status === 200) {
-          //   this.$q.notify({
-          //     message: "로그인 되었습니다.",
-          //     icon: "done_all",
-          //     color: "primary",
-          //   });
-          //   this.$router.push("/");
-          // } else {
-          //   alert('로그인에 실패하였습니다.');
-          // }
+          if(data.response.status === 200) {
+            this.$q.notify({
+              message: "로그인 되었습니다.",
+              icon: "done_all",
+              color: "primary",
+            });
+            this.$router.push("/");
+          } else {
+            alert('로그인에 실패하였습니다.');
+          }
         });
     },
   },
