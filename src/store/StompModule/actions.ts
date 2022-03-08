@@ -10,9 +10,7 @@ import SocketLoadingDialog from 'src/components/SocketLoadingDialog.vue';
 import axios from 'axios';
 import JwtService from 'src/assets/common/jwt.service';
 
-const socket = new SockJS(API_URL+'socket');
-const stomp = Stomp.over(socket) as Client;
-// stomp.debug = () => {};
+let stomp: Client;
 
 let RoomListSub: Subscription;
 let RoomSub: Subscription;
@@ -21,26 +19,36 @@ let YachtListSub: Subscription;
 let YachtSub: Subscription;
 
 const actions: ActionTree<StompModuleStateInterface, StateInterface> = {
+  setterStomp(context) {
+    context.commit('setStomp', stomp);
+  },
+
   connect(context) {
+    const socket = new SockJS(API_URL+'socket');
+    const options = {debug: true, protocols: Stomp.VERSIONS.supportedProtocols()};
+    stomp = Stomp.over(socket, options);
+
+    context.commit('setStomp', stomp);
+
     return new Promise<void>((resolve, reject) => {
       const loadingDialog = Dialog.create({
         component: SocketLoadingDialog
       })
 
-      stomp?.connect(
+      stomp.connect(
         {
           'x-auth-token': JwtService?.getToken()||''
         },
         frame => {
           // 소켓 연결 성공
-          context.commit('setStomp', stomp);
+          console.log(frame);
           context.commit('setConnectStatus', true);
           loadingDialog?.hide();
           resolve();
         },
         error => {
           // 소켓 연결 실패
-          context.commit('setStomp', null);
+          console.log(error);
           context.commit('setConnectStatus', false);
           loadingDialog?.hide();
           reject();
@@ -50,8 +58,7 @@ const actions: ActionTree<StompModuleStateInterface, StateInterface> = {
   },
 
   disconnect(context) {
-    stomp?.disconnect();
-    context.commit('setStomp', null);
+    stomp.disconnect();
   },
 
   SubscribeRoomList(context) {
@@ -151,6 +158,11 @@ const actions: ActionTree<StompModuleStateInterface, StateInterface> = {
         resolve();
       });
     })
+  },
+  
+  UnSubscribeYacht(context) {
+    YachtSub?.unsubscribe();
+    context.commit('updateYachtScore', []);
   },
 };
 

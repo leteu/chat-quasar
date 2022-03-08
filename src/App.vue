@@ -9,6 +9,7 @@ export default defineComponent({
 
   created(){
     this.$store.dispatch('AuthModule/setHeaderAction');
+    this.$store.dispatch('StompModule/setterStomp');
   }
 })
 </script>

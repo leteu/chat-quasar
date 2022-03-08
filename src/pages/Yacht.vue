@@ -13,27 +13,38 @@
 import { defineComponent } from 'vue';
 import Yacht from 'src/components/Yacht';
 import RoomVue from 'src/components/Room.vue';
+import { useRoute } from 'vue-router';
+import { useStore } from 'src/store';
 
 export default defineComponent({
   components: {
     Yacht,
     RoomVue
   },
-  async created() {
-    if(this.$store.getters['StompModule/getConnectStatus']) {
-      this.$store.dispatch('StompModule/SubscribeYacht', this.$route.params.roomId)
-    } else {
-      const connectServer = async () => {
-        await this.$store.dispatch('StompModule/connect')
-          .then(() => {
-            this.$store.dispatch('StompModule/SubscribeYacht', this.$route.params.roomId)
-          })
-          .catch(() => {
-            connectServer();
-          })
-      };
+  setup() {
+    const $store = useStore();
+    const $route = useRoute();
 
-      connectServer();
+    const connectServer = async () => {
+      await $store.dispatch('StompModule/connect')
+        .then(() => {
+          $store.dispatch('StompModule/SubscribeYacht', $route.params.roomId)
+        })
+        .catch(() => {
+          connectServer();
+        })
+    };
+
+    (() => {
+      if(!$store.getters['StompModule/getConnectStatus']) {
+        connectServer();
+      } else {
+        $store.dispatch('StompModule/SubscribeYacht', $route.params.roomId)
+      }
+    })();
+
+    return {
+
     }
   }
 })
