@@ -105,10 +105,13 @@ export default defineComponent({
     }
   },
   created() {
-    if(this.$store.getters['StompModule/getConnectStatus']) {
-      this.$store.dispatch('StompModule/SubscribeUserInfo', this.$route.params.roomId)
-      this.$store.dispatch('StompModule/SubscribeRoom', this.$route.params.roomId)
-    }
+    const subRoom = setInterval(() => {
+      if(this.$store.getters['StompModule/getConnectStatus']) {
+        clearInterval(subRoom);
+        this.$store.dispatch('StompModule/SubscribeUserInfo', this.$route.params.roomId)
+        this.$store.dispatch('StompModule/SubscribeRoom', this.$route.params.roomId)
+      }
+    }, 1000);
   },
   computed: {
     dataList: function (): Chat[] {
