@@ -14,7 +14,7 @@
     </q-card>
     <div class="text-center q-mt-sm q-gutter-x-lg">
       <q-btn label="게임 시작" color="primary" @click="startGame()" :disable="gameState" />
-      <q-btn label="굴리기" color="primary" @click="rollDice()" :disable="times === 3" />
+      <q-btn label="굴리기" color="primary" @click="rollDice()" :disable="times === 3 || !gameState" />
       <span class="fs-125 text-weight-bold text-vertical-bottom">
         {{ times }} / 3
       </span>
@@ -27,6 +27,7 @@ import { defineComponent } from 'vue'
 import YachtDice from './YachtDice'
 import delay from 'src/assets/common/funcitons/DelayTime'
 import axios from 'axios';
+import { YachtListSub } from 'src/store/StompModule/actions';
 
 export default defineComponent({
   components: {
@@ -67,7 +68,18 @@ export default defineComponent({
   },
   computed: {
     gameState: function () {
-      return this.$store.getters['StompModule/isYatchStarted']
+      return this.$store.getters['StompModule/isYachtStarted'];
+    }
+  },
+  created() {
+    if(!YachtListSub) {
+      const subRoomList = setInterval(() => {
+        if(this.$store.getters['StompModule/getConnectStatus']) {
+          clearInterval(subRoomList);
+          this.$store.dispatch('StompModule/SubscribeYachtList');
+          this.gameState;
+        }
+      }, 1000);
     }
   },
   methods: {
@@ -111,6 +123,11 @@ export default defineComponent({
 
     startGame() {
       axios.put(`/room/${this.$route.params.roomId}/start`)
+        .then(({data, status}) => {
+          if(status === 200) {
+            this.$store.dispatch('StompModule/setterYachtState', true)
+          }
+        })
     }
   }
 })
