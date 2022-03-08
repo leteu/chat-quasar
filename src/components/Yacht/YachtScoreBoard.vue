@@ -17,32 +17,56 @@
           </template>
         </q-card>
       </q-card-section>
-      <template v-for="(user, index) in users" :key="`user-${user.userName}-${index}`">
-        <q-card-section class="col q-pa-none scroll-x row no-wrap">
-          <q-card flat bordered class="full-height col min-width-200px" square>
-            <q-card-section class="q-pa-none q-py-sm q-py-sm">
-              {{ user.userName }}
-            </q-card-section>
-            <template v-if="user.scoreBoard.length">
-              <template v-for="(item, idx) in user.scoreBoard" :key="`user-${item.id}-${idx}`">
-                <q-separator />
-                <q-card-section
-                  class="q-pa-none q-py-sm col min-height-37px"
-                  :class="item.score ? 'bg-green-5' : ''"
-                  @click="() => !['합계', '보너스'].includes(item.label) ? getScore(user, item.label) : {}"
-                >
-                  {{item.score||hint[item.label]||''}}
-                </q-card-section>
+      <template v-if="!!users.length">
+        <template v-for="(user, index) in users" :key="`user-${user.userName}-${index}`">
+          <q-card-section class="col q-pa-none scroll-x row no-wrap">
+            <q-card flat bordered class="full-height col min-width-200px" square>
+              <q-card-section class="q-pa-none q-py-sm q-py-sm">
+                {{ user.userName }}
+              </q-card-section>
+              <template v-if="user.scoreBoard.length">
+                <template v-for="(item, idx) in user.scoreBoard" :key="`user-${item.id}-${idx}`">
+                  <q-separator />
+                  <q-card-section
+                    class="q-pa-none q-py-sm col min-height-37px"
+                    :class="`${item.score ? 'bg-green-5' : ''} ${!['합계', '보너스'].includes(item.label) && !!currentDice && user.myTurn ? 'cursor-pointer' : ''}`"
+                    @click="() => !['합계', '보너스'].includes(item.label) && !!currentDice && user.myTurn
+                                    ? getScore(user, item.label)
+                                    : {}"
+                  >
+                    <template v-if="decodeToken().id === user.id">
+                      <span
+                        :class="!item.score && !!hint[item.label] ? 'text-grey-5' : ''"
+                        class="text-weight-bold"
+                      >
+                        {{item.score||hint[item.label]||''}}
+                      </span>
+                    </template>
+                    <template v-else>
+                      {{item.score||''}}
+                    </template>
+                  </q-card-section>
+                </template>
               </template>
-            </template>
-            <template v-else>
-              <q-separator />
-              <div class="full-height full-width flex items-center justify-center">
-                대기중
-              </div>
-            </template>
-          </q-card>
+              <template v-else>
+                <q-separator />
+                <div class="full-height full-width flex items-center justify-center">
+                  대기중
+                </div>
+              </template>
+            </q-card>
+          </q-card-section>
+        </template>
+      </template>
+      <template v-else>
+        <q-card-section class="col q-pa-none column">
+          <q-separator />
+          <div class="col flex items-center justify-center">
+            게임이 시작되지 않았습니다.
+          </div>
+          <q-separator />
         </q-card-section>
+        <q-separator vertical />
       </template>
     </q-card-section>
   </q-card>
@@ -113,21 +137,36 @@ const rules = [
 ];
 
 const newScoreBoard = [
-  { label: 'ones',      score: 0 },
-  { label: 'twos',      score: 0 },
-  { label: 'threes',    score: 0 },
-  { label: 'fours',     score: 0 },
-  { label: 'fives',     score: 0 },
-  { label: 'sixes',     score: 0 },
-  { label: 'bonus',     score: 0 },
-  { label: 'choice',    score: 0 },
-  { label: 'fullHouse', score: 0 },
-  { label: 'fourOf',    score: 0 },
-  { label: 'lgSt',      score: 0 },
-  { label: 'smSt',      score: 0 },
-  { label: 'yacht',     score: 0 },
-  { label: '합계',      score: 0 },
+  { label: 'ones',      value: 'ones',          score: 0 },
+  { label: 'twos',      value: 'twos',          score: 0 },
+  { label: 'threes',    value: 'threes',        score: 0 },
+  { label: 'fours',     value: 'fours',         score: 0 },
+  { label: 'fives',     value: 'fives',         score: 0 },
+  { label: 'sixes',     value: 'sixes',         score: 0 },
+  { label: 'bonus',     value: 'bonus',         score: 0 },
+  { label: 'choice',    value: 'chance',        score: 0 },
+  { label: 'fullHouse', value: 'fullHouse',     score: 0 },
+  { label: 'fourOf',    value: 'fourOfKind',    score: 0 },
+  { label: 'lgSt',      value: 'largeStraight', score: 0 },
+  { label: 'smSt',      value: 'smallStraight', score: 0 },
+  { label: 'yacht',     value: 'yahtzee',       score: 0 },
+  { label: '합계',      value: 'totalScore',    score: 0 },
 ];
+
+type ScoreType = 'ones'
+| 'twos'
+| 'threes'
+| 'fours'
+| 'fives'
+| 'sixes'
+| 'bonus'
+| 'chance'
+| 'fullHouse'
+| 'fourOf'
+| 'lgSt'
+| 'smSt'
+| 'yahtzee'
+| 'totalScore'
 
 export default defineComponent({
   props: [ 'currentDice' ],
@@ -135,37 +174,49 @@ export default defineComponent({
     return {
       rules,
       hint: {
-        aces: 0,
-        chance: 0,
-        fives: 0,
-        fourOfKind: 0,
-        fours: 0,
-        fullHouse: 0,
-        largeStraight: 0,
-        sixes: 0,
-        smallStraight: 0,
-        threeOfKind: 0,
-        threes: 0,
+        ones: 0,
         twos: 0,
+        threes: 0,
+        fours: 0,
+        fives: 0,
+        sixes: 0,
+        chance: 0,
+        fullHouse: 0,
+        fourOf: 0,
+        lgSt: 0,
+        smSt: 0,
         yahtzee: 0,
       }
     }
   },
   computed: {
     users: function() {
-      return (this.$store.getters['StompModule/getUserInfo'] as UserInfo[]).map(item => {
+      return (this.$store.getters['StompModule/getYachtScoreBoard']?.userInfos||[]).map((item: {[k: string]: any}) => {
         return {
+          id: item.userId,
           userName: item.userName,
-          scoreBoard: []
+          simpSessionId: item.simpSessionId,
+          myTurn: item.TurnUserId === this.decodeToken().id,
+          scoreBoard: newScoreBoard.map(board => {
+            board.score = item[board.value]||0;
+            return board;
+          })
         }
-      });
+      })
     }
   },
   methods: {
-    getScore(user: any, item: string) {
+    getScore(user: any, item: ScoreType) {
       // this.$emit('get:score', { user, item });
 
       console.log(user, item)
+
+      this.$store.dispatch('StompModule/sendYachtGetScore', {
+        roomId: this.$route.params.roomId,
+        simpSessionId: user.simpSessionId,
+        scoreType: item,
+        score: (this.hint as { [k: string]: any })[item]||0
+      })
     },
 
     sendDice(value: DiceObj) {
