@@ -69,7 +69,6 @@ export default defineComponent({
 <style lang="sass" scoped>
 .main-card
   width: 400px
-  height: 145px
 .card-header
   background: $teal-4
   &__img-box
