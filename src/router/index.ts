@@ -6,7 +6,7 @@ import {
   createWebHashHistory,
   createWebHistory,
 } from 'vue-router';
-import store, { StateInterface, storeKey } from '../store';
+import store, { StateInterface, storeKey, useStore } from '../store';
 import routes from './routes';
 
 /*
@@ -84,6 +84,11 @@ export default route<StateInterface>(function (/* { store, ssrContext } */) {
         next(from.path);
         return;
       }
+    }
+
+    if(from.matched.some(record => record.meta.yacht) && !to.matched.some(record => record.meta.yacht)) {
+      store.dispatch('StompModule/UnSubscribeYatchList');
+      next();
     }
 
     next();
