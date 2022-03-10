@@ -89,7 +89,7 @@ export default defineComponent({
     startGame() {
       if(!this.gameStatus) {
         this.move = { x: 1, y: 0 };
-        gameInterval = setInterval(this.game, 1000/15);
+        gameInterval = setInterval(this.game, 500/15);
         this.gameStatus = true;
       }
     },
