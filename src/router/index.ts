@@ -9,6 +9,8 @@ import {
 import store, { StateInterface, storeKey, useStore } from '../store';
 import routes from './routes';
 
+import { RoomListSub, RoomSub, UserInfoSub, YachtListSub, YachtSub } from '../store/StompModule/actions';
+
 /*
  * If not building with SSR mode, you can
  * directly export the Router instantiation;
@@ -86,8 +88,41 @@ export default route<StateInterface>(function (/* { store, ssrContext } */) {
       }
     }
 
+    if(!from.matched.some(record => record.meta.yacht) && to.matched.some(record => record.meta.yacht)) {
+      if(RoomListSub){
+        store.dispatch('StompModule/UnSubscribeRoomList');
+      }
+      if(RoomSub){
+        store.dispatch('StompModule/UnSubscribeRoom');
+      }
+      if(UserInfoSub){
+        store.dispatch('StompModule/UnSubscribeUserInfo');
+      }
+      if(YachtListSub){
+        store.dispatch('StompModule/UnSubscribeYatchList');
+      }
+      if(YachtSub){
+        store.dispatch('StompModule/UnSubscribeYacht');
+      }
+      next();
+    }
+
     if(from.matched.some(record => record.meta.yacht) && !to.matched.some(record => record.meta.yacht)) {
-      store.dispatch('StompModule/UnSubscribeYatchList');
+      if(RoomListSub){
+        store.dispatch('StompModule/UnSubscribeRoomList');
+      }
+      if(RoomSub){
+        store.dispatch('StompModule/UnSubscribeRoom');
+      }
+      if(UserInfoSub){
+        store.dispatch('StompModule/UnSubscribeUserInfo');
+      }
+      if(YachtListSub){
+        store.dispatch('StompModule/UnSubscribeYatchList');
+      }
+      if(YachtSub){
+        store.dispatch('StompModule/UnSubscribeYacht');
+      }
       next();
     }
 
