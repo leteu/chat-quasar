@@ -55,7 +55,7 @@
                       item.value !== 'bonus' &&
                       !['합계', '보너스'].includes(item.label) &&
                       !!currentDice &&
-                      user.myTurn
+                      user.id === this.decodeToken().id
                         ? 'cursor-pointer'
                         : ''
                     }`"
@@ -65,7 +65,7 @@
                         item.value !== 'bonus' &&
                         !['합계', '보너스'].includes(item.label) &&
                         !!currentDice &&
-                        user.myTurn
+                        user.id === this.decodeToken().id
                           ? getScore(user, item.value)
                           : {}
                     "
