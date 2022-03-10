@@ -94,6 +94,7 @@ import getters from 'src/store/StompModule/getters';
 import { Chat, UserInfo } from 'src/store/StompModule/state';
 import { defineComponent } from 'vue'
 import IMEInput from './IME/IMEInput';
+import { YachtSub } from 'src/store/StompModule/actions';
 
 export default defineComponent({
   components: {
@@ -151,12 +152,18 @@ export default defineComponent({
       })
     },
     leave(event: any) {
+      if(YachtSub){
+        this.$store.dispatch('StompModule/UnSubscribeYacht');
+      }
       this.$store.dispatch('StompModule/UnSubscribeRoom');
       this.$store.dispatch('StompModule/UnSubscribeUserInfo');
       this.$store.commit('StompModule/setCurrenRoomState', null);
     }
   },
   beforeRouteLeave(to, from, next) {
+    if(YachtSub){
+        this.$store.dispatch('StompModule/UnSubscribeYacht');
+      }
     this.$store.dispatch('StompModule/UnSubscribeRoom');
     this.$store.dispatch('StompModule/UnSubscribeUserInfo');
     this.$store.commit('StompModule/setCurrenRoomState', null);
