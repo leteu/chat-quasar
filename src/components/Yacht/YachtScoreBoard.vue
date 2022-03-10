@@ -232,8 +232,14 @@ export default defineComponent({
   },
   computed: {
     users: function () {
-    users: function() {
-      return (this.$store.getters['StompModule/getYachtScoreBoard']?.userInfos||[]).map((item: {[k: string]: any}) => {
+      if (this.$store.getters["StompModule/getYachtScoreBoard"].remainingTurns === 0) {
+        this.$q.dialog({
+          title: '승자!!',
+          message: this.$store.getters["StompModule/getYachtScoreBoard"].userInfos.sort((a: { totalScore: number }, b: { totalScore: number }) => b.totalScore - a.totalScore)[0].userName
+        })
+        return [];
+      }
+
       return (
         this.$store.getters["StompModule/getYachtScoreBoard"]?.userInfos || []
       ).map((item: { [k: string]: any }) => {
