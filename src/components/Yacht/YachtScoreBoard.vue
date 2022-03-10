@@ -28,22 +28,31 @@
                 <template v-for="(item, idx) in user.scoreBoard" :key="`user-${item.id}-${idx}`">
                   <q-separator />
                   <q-card-section
-                    class="q-pa-none q-py-sm col min-height-37px"
-                    :class="`${item.score ? 'bg-green-5' : ''} ${!['합계', '보너스'].includes(item.label) && !!currentDice && user.myTurn ? 'cursor-pointer' : ''}`"
+                    class="q-pa-none col min-height-37px"
+                    :class="`${item.score && item.value !== 'bonus' ? 'bg-green-5' : ''} ${!['합계', '보너스'].includes(item.label) && !!currentDice && user.myTurn ? 'cursor-pointer' : ''}`"
                     @click="() => !['합계', '보너스'].includes(item.label) && !!currentDice && user.myTurn
-                                    ? getScore(user, item.label)
+                                    ? getScore(user, item.value)
                                     : {}"
                   >
-                    <template v-if="decodeToken().id === user.id">
+                    <template v-if="item.value === 'bonus'">
+                      <q-linear-progress size="37px" :value="(item.score||0)/63" color="green-5" class="q-pa-none">
+                        <span class="absolute-full flex flex-center" :class="((item.score||0)/63) < 0.5 ? 'text-dark' : 'text-white'" style="font-size: 14px">
+                          {{item.score||0}}
+                        </span>
+                      </q-linear-progress>
+                    </template>
+                    <template v-else-if="decodeToken().id === user.id">
                       <span
-                        :class="!item.score && !!hint[item.value] ? 'text-grey-5' : ''"
-                        class="text-weight-bold"
+                        :class="item.score === null && hint[item.value] !== null ? 'text-grey-5 text-weight-bold' : ''"
+                        class="absolute-full flex flex-center"
                       >
-                        {{item.score !== null ? item.score : hint[item.value]||''}}
+                        {{ item.score !== null ? item.score : !['합계', '보너스'].includes(item.label) && !!currentDice && user.myTurn ? hint[item.value] !== null ? hint[item.value] : '' : '' }}
                       </span>
                     </template>
                     <template v-else>
-                      {{item.score !== null ? item.score : ''}}
+                      <span class="absolute-full flex flex-center">
+                        {{item.score !== null ? item.score : ''}}
+                      </span>
                     </template>
                   </q-card-section>
                 </template>
@@ -144,14 +153,14 @@ const newScoreBoard = [
   { label: 'fours',     value: 'fours',         score: null as Nullable<number> },
   { label: 'fives',     value: 'fives',         score: null as Nullable<number> },
   { label: 'sixes',     value: 'sixes',         score: null as Nullable<number> },
-  { label: 'bonus',     value: 'bonus',         score: null as Nullable<number> },
+  { label: 'bonus',     value: 'bonus',         score: 0 as number },
   { label: 'choice',    value: 'chance',        score: null as Nullable<number> },
   { label: 'fullHouse', value: 'fullHouse',     score: null as Nullable<number> },
   { label: 'fourOf',    value: 'fourOfKind',    score: null as Nullable<number> },
   { label: 'lgSt',      value: 'largeStraight', score: null as Nullable<number> },
   { label: 'smSt',      value: 'smallStraight', score: null as Nullable<number> },
   { label: 'yacht',     value: 'yahtzee',       score: null as Nullable<number> },
-  { label: '합계',      value: 'totalScore',    score: null as Nullable<number> },
+  { label: '합계',      value: 'totalScore',    score: 0 as number },
 ];
 
 type ScoreType = 'ones'
@@ -175,31 +184,36 @@ export default defineComponent({
     return {
       rules,
       hint: {
-        ones: 0,
-        twos: 0,
-        threes: 0,
-        fours: 0,
-        fives: 0,
-        sixes: 0,
-        chance: 0,
-        fullHouse: 0,
-        fourOfKind: 0,
-        largeStraight: 0,
-        smallStraight: 0,
-        yahtzee: 0,
-      }
+        ones: null,
+        twos: null,
+        threes: null,
+        fours: null,
+        fives: null,
+        sixes: null,
+        chance: null,
+        fullHouse: null,
+        fourOfKind: null,
+        largeStraight: null,
+        smallStraight: null,
+        yahtzee: null,
+      } as {[key: string]: Nullable<number>}
     }
   },
   computed: {
     users: function() {
       return (this.$store.getters['StompModule/getYachtScoreBoard']?.userInfos||[]).map((item: {[k: string]: any}) => {
+        console.log(item);
         return {
           id: item.userId,
           userName: item.userName,
           simpSessionId: item.simpSessionId,
           myTurn: this.$store.getters['StompModule/getYachtScoreBoard'].turnUserId === this.decodeToken().id,
           scoreBoard: newScoreBoard.map(board => {
-            board.score = item[board.value]||0;
+            if(board.value !== 'bonus') {
+              board.score = item[board.value] === null ? null : item[board.value] === 0 ? 0 : item[board.value]||'';
+            } else {
+              board.score = item.generalScoreTotal;
+            }
             return board;
           })
         }
@@ -217,6 +231,21 @@ export default defineComponent({
         simpSessionId: user.simpSessionId,
         scoreType: item,
         score: (this.hint as { [k: string]: any })[item]||0
+      }).then(() => {
+        this.hint = {
+          ones: null,
+          twos: null,
+          threes: null,
+          fours: null,
+          fives: null,
+          sixes: null,
+          chance: null,
+          fullHouse: null,
+          fourOfKind: null,
+          largeStraight: null,
+          smallStraight: null,
+          yahtzee: null,
+        }
       })
     },
 
