@@ -2,19 +2,20 @@
   <div class="column">
     <q-card bordered>
       <q-card-section class="flex items-center justify-between q-gutter-x-xl">
-        <template v-for="(item, index) in ['first', 'second', 'third', 'fourth', 'fifth']" :key="`roll-dice-${index}`">
+        <template v-for="(item, index) in ['first', 'second', 'third', 'fourth', 'fifth']" :key="`roll-dice-${index}-${currentTime}`">
           <YachtDice
             :diceValue="dice[item].value"
             :fixed="dice[item].fixed"
             :roll="dice[item].roll"
-            @click="fixedDice(dice[item])"
+            @click="myTurn ? fixedDice(dice[item]) : () => {}"
+            :class="myTurn ? 'cursor-pointer' : 'cursor-not-allowed'"
           />
         </template>
       </q-card-section>
     </q-card>
     <div class="text-center q-mt-sm q-gutter-x-lg">
       <q-btn label="게임 시작" color="primary" @click="startGame()" :disable="gameState" />
-      <q-btn label="굴리기" color="primary" @click="rollDice()" :disable="(times === 3 || !gameState) && myTurn" />
+      <q-btn label="굴리기" color="primary" @click="rollDice()" :disable="!gameState || times === 3 || !myTurn" />
       <span class="fs-125 text-weight-bold text-vertical-bottom">
         {{ times }} / 3
       </span>
@@ -28,6 +29,7 @@ import YachtDice from './YachtDice'
 import delay from 'src/assets/common/funcitons/DelayTime'
 import axios from 'axios';
 import { YachtListSub } from 'src/store/StompModule/actions';
+import moment from 'moment';
 
 export default defineComponent({
   components: {
@@ -63,7 +65,7 @@ export default defineComponent({
         }
       },
 
-      times: 0
+      times: 0,
     };
   },
   computed: {
@@ -71,8 +73,12 @@ export default defineComponent({
       return this.$store.getters['StompModule/isYachtStarted'];
     },
     myTurn: function () {
-      this.times = 0;
-      return this.$store.getters['StompModule/getYachtScoreBoard']?.turnUserId === this.decodeToken().id
+      const turn = this.$store.getters['StompModule/getYachtScoreBoard']?.turnUserId === this.decodeToken().id;
+      return turn;
+    },
+
+    currentTime: function () {
+      return moment(new Date).format('YYYYMMDDHHmmss')
     }
   },
   created() {
@@ -132,6 +138,43 @@ export default defineComponent({
             this.$store.dispatch('StompModule/setterYachtState', true)
           }
         })
+    }
+  },
+  watch: {
+    myTurn: {
+      handler: function(newVal, oldVal) {
+        if(newVal !== oldVal) {
+          this.times = 0;
+          this.dice = {
+            first: {
+              value: 1,
+              fixed: false,
+              roll: false
+            },
+            second: {
+              value: 1,
+              fixed: false,
+              roll: false
+            },
+            third: {
+              value: 1,
+              fixed: false,
+              roll: false
+            },
+            fourth: {
+              value: 1,
+              fixed: false,
+              roll: false
+            },
+            fifth: {
+              value: 1,
+              fixed: false,
+              roll: false
+            }
+          };
+        }
+      },
+      deep: true
     }
   }
 })
