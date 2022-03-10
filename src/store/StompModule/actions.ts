@@ -12,11 +12,11 @@ import JwtService from 'src/assets/common/jwt.service';
 
 let stomp: Client;
 
-let RoomListSub: Subscription;
-let RoomSub: Subscription;
-let UserInfoSub: Subscription;
+export let RoomListSub: Subscription;
+export let RoomSub: Subscription;
+export let UserInfoSub: Subscription;
 export let YachtListSub: Subscription;
-let YachtSub: Subscription;
+export let YachtSub: Subscription;
 
 const actions: ActionTree<StompModuleStateInterface, StateInterface> = {
   setterStomp(context) {
