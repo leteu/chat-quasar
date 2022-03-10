@@ -35,9 +35,9 @@
                                     : {}"
                   >
                     <template v-if="item.value === 'bonus'">
-                      <q-linear-progress size="37px" :value="(item.score||0)/63" color="green-5" class="q-pa-none">
-                        <span class="absolute-full flex flex-center" :class="((item.score||0)/63) < 0.5 ? 'text-dark' : 'text-white'" style="font-size: 14px">
-                          {{item.score||0}}
+                      <q-linear-progress size="37px" :value="(item.generalScoreTotal||0)/63" color="green-5" class="q-pa-none">
+                        <span class="absolute-full flex flex-center" :class="((item.generalScoreTotal||0)/63) < 0.5 ? 'text-dark' : 'text-white'" style="font-size: 14px">
+                          {{item.score||0}} {{ `(${item.generalScoreTotal} / 63)` }}
                         </span>
                       </q-linear-progress>
                     </template>
@@ -153,7 +153,7 @@ const newScoreBoard = [
   { label: 'fours',     value: 'fours',         score: null as Nullable<number> },
   { label: 'fives',     value: 'fives',         score: null as Nullable<number> },
   { label: 'sixes',     value: 'sixes',         score: null as Nullable<number> },
-  { label: 'bonus',     value: 'bonus',         score: 0 as number },
+  { label: 'bonus',     value: 'bonus',         score: 0 as number, generalScoreTotal: 0 },
   { label: 'choice',    value: 'chance',        score: null as Nullable<number> },
   { label: 'fullHouse', value: 'fullHouse',     score: null as Nullable<number> },
   { label: 'fourOf',    value: 'fourOfKind',    score: null as Nullable<number> },
@@ -202,21 +202,24 @@ export default defineComponent({
   computed: {
     users: function() {
       return (this.$store.getters['StompModule/getYachtScoreBoard']?.userInfos||[]).map((item: {[k: string]: any}) => {
-        console.log(item);
-        return {
+        const obj = {
           id: item.userId,
           userName: item.userName,
           simpSessionId: item.simpSessionId,
           myTurn: this.$store.getters['StompModule/getYachtScoreBoard'].turnUserId === this.decodeToken().id,
           scoreBoard: newScoreBoard.map(board => {
-            if(board.value !== 'bonus') {
-              board.score = item[board.value] === null ? null : item[board.value] === 0 ? 0 : item[board.value]||'';
-            } else {
-              board.score = item.generalScoreTotal;
+            const eaBoard = JSON.parse(JSON.stringify(board));
+
+            eaBoard.score = item[eaBoard.value] === null ? null : item[eaBoard.value] === 0 ? 0 : item[eaBoard.value]||'';
+
+            if(eaBoard.value === 'bonus') {
+              eaBoard.generalScoreTotal = item.generalScoreTotal;
             }
-            return board;
+
+            return eaBoard;
           })
-        }
+        };
+        return obj;
       })
     }
   },
